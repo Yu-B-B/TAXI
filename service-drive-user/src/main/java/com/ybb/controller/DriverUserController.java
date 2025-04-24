@@ -1,29 +1,57 @@
 package com.ybb.controller;
 
+import com.ybb.constant.DriverCarConstants;
 import com.ybb.dto.DriverUser;
 import com.ybb.dto.ResponseResult;
+import com.ybb.response.DriverUserExistsResponse;
 import com.ybb.service.DriverUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DriverUserController {
     @Autowired
     private DriverUserService driverUserService;
+
     /**
      * 新增司机
+     *
      * @param driverUser
      * @return
      */
     @PostMapping("/user/insert")
-    public ResponseResult addUser(@RequestBody DriverUser driverUser){
+    public ResponseResult addUser(@RequestBody DriverUser driverUser) {
         return driverUserService.addDriverUser(driverUser);
     }
 
     @PostMapping("/user/update")
-    public ResponseResult updateUser(@RequestBody DriverUser driverUser){
+    public ResponseResult updateUser(@RequestBody DriverUser driverUser) {
         return driverUserService.updateUser(driverUser);
+    }
+
+    /**
+     * 根据手机号验证司机是否存在
+     *
+     * @param checkPhone
+     * @return
+     */
+    @GetMapping("/driver-user/{checkPhone}")
+    public ResponseResult<DriverUserExistsResponse> checkDriver(@PathVariable("checkPhone") String checkPhone) {
+        ResponseResult<DriverUser> driverUser = driverUserService.checkUserExistsWithPhone(checkPhone);
+        DriverUser driverUserDb = driverUser.getData();
+
+        DriverUserExistsResponse response = new DriverUserExistsResponse();
+
+        int ifExists = DriverCarConstants.DRIVER_EXISTS;
+        if (driverUserDb == null){
+            ifExists = DriverCarConstants.DRIVER_NOT_EXISTS;
+            response.setDriverPhone(checkPhone);
+            response.setIfExists(ifExists);
+        }else {
+            response.setDriverPhone(driverUserDb.getDriverPhone());
+            response.setIfExists(ifExists);
+        }
+
+        return ResponseResult.success(response);
     }
 }
