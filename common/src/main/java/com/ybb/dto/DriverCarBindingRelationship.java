@@ -5,12 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
- *
- * @author 晁鹏飞
- * @since 2022-08-13
+ * 司机与车辆信息绑定
  */
 @Data
 public class DriverCarBindingRelationship implements Serializable {

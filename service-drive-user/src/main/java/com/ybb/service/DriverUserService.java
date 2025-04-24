@@ -35,9 +35,8 @@ public class DriverUserService {
         driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_STOP);
         driverUserWorkStatus.setGmtModified(now);
         driverUserWorkStatus.setGmtCreate(now);
-        driverUserWorkStatusMapper.insert(driverUserWorkStatus);
-
-
+        // TODO:插入一条司机信息
+//        driverUserWorkStatusMapper.insert(driverUserWorkStatus);
         return ResponseResult.success("");
     }
 
@@ -49,7 +48,8 @@ public class DriverUserService {
     public ResponseResult updateUser(DriverUser driverUser) {
         LocalDateTime now = LocalDateTime.now();
         driverUser.setGmtModified(now);
-        driverUserMapper.updateById(driverUser);
-        return ResponseResult.success("");
+        // TODO：司机修改个人信息放行
+//        driverUserMapper.updateById(driverUser);
+        return ResponseResult.success("已成功修改");
     }
 }

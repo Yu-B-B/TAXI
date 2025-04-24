@@ -3,15 +3,6 @@ package com.ybb.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * <p>
- * 
- * </p>
- *
- * @author 晁鹏飞
- * @since 2022-09-17
- */
-
 public class DriverUserWorkStatus implements Serializable {
 
     private Long id;

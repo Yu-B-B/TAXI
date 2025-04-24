@@ -7,12 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient("server-driver-user")
-public interface DriverServiceFeign {
-    // 司机端数据插入方法
-    @PostMapping("/user/insert")
-    ResponseResult insertDriverUser(@RequestBody DriverUser driverUser);
-
+public interface DriverUserFeignClient {
     @PostMapping("/user/update")
-     ResponseResult updateDriverUser(@RequestBody DriverUser driverUser);
-
+    ResponseResult updateUser(@RequestBody DriverUser driverUser);
 }
