@@ -21,4 +21,20 @@ public class VerificationController {
     public ResponseResult getVerificationCode(@RequestBody VerificationCodeDto verificationCodeDto) {
         return verificationCodeService.getVerificationCode(verificationCodeDto.getDriverPhone());
     }
+
+    /**
+     * 点击登录校验验证码
+     *
+     * @param verificationCodeDTO
+     * @return
+     */
+    @PostMapping("/verification-code-check")
+    public ResponseResult checkVerificationCode(@RequestBody VerificationCodeDto verificationCodeDTO){
+        String driverPhone = verificationCodeDTO.getDriverPhone();
+        String verificationCode = verificationCodeDTO.getVerificationCode();
+
+        System.out.println("手机号"+driverPhone+",验证码："+verificationCode);
+
+        return verificationCodeService.checkCode(driverPhone,verificationCode);
+    }
 }
