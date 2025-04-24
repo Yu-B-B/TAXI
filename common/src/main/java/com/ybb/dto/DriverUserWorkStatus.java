@@ -3,13 +3,16 @@ package com.ybb.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 司机工作状态
+ */
 public class DriverUserWorkStatus implements Serializable {
 
     private Long id;
 
     private Long driverId;
 
-    private Integer workStatus;
+    private Integer workStatus; // 0：收车，1：出车；2：暂停接单
 
     /**
      * 创建时间

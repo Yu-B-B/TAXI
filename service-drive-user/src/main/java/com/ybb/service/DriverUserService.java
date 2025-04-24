@@ -38,7 +38,7 @@ public class DriverUserService {
         // 初始化 司机工作状态表
         DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
         driverUserWorkStatus.setDriverId(driverUser.getId());
-        driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_STOP);
+        driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_STOP); // 初始化司机工作状态
         driverUserWorkStatus.setGmtModified(now);
         driverUserWorkStatus.setGmtCreate(now);
         // TODO:插入一条司机信息
