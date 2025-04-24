@@ -1,0 +1,17 @@
+server:
+  port: 5604
+spring:
+  application:
+    name: service-map
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.0.106:3306/taxi-passenger?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root1
+    password: 987654
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+amap:
+  app:
+    key: f0c42d8524d2eea5e41a445b53f9f38e
