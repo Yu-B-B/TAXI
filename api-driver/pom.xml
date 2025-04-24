@@ -8,7 +8,7 @@
     </parent>
     <artifactId>api-driver</artifactId>
 
-    <description>司机端自行调用修改个人信息</description>
+    <description>司机端对外接口</description>
 
     <dependencies>
         <dependency>
