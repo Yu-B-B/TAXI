@@ -40,6 +40,7 @@ public class PriceRule {
      */
     private Integer fareVersion;
 
+
     /**
      * 运价类型编码
      */
