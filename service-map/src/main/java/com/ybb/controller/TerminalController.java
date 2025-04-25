@@ -37,7 +37,6 @@ public class TerminalController {
      */
     @PostMapping("/aroundsearch")
     public ResponseResult<List<TerminalResponse>> aroundsearch(String center , Integer radius){
-
         return terminalService.aroundsearch(center,radius);
     }
 

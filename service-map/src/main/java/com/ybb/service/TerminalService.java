@@ -15,14 +15,24 @@ public class TerminalService {
     @Autowired
     TerminalClient terminalClient;
 
+    /**
+     * 添加终端
+     * @param name
+     * @param desc
+     * @return
+     */
     public ResponseResult<TerminalResponse> add(String name , String desc){
-
         return terminalClient.add(name , desc);
     }
 
 
+    /**
+     * 终端搜索 - 在司机api端调用
+     * @param center
+     * @param radius
+     * @return
+     */
     public ResponseResult<List<TerminalResponse>> aroundsearch(String center, Integer radius){
-
         return terminalClient.aroundsearch(center,radius);
     }
 

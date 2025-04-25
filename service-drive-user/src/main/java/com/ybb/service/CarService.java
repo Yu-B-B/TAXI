@@ -26,7 +26,7 @@ public class CarService {
         car.setGmtModified(now);
         car.setGmtCreate(now);
         carMapper.insert(car);
-        // 增加：车辆与终端关联，【车牌号】与
+        // 增加：车辆与终端关联，【车牌号】，增加车辆与终端关联，carId
         ResponseResult<TerminalResponse> terminal = serviceMapClient.addTerminal(car.getVehicleNo(), car.getId() + "");
         String tid = terminal.getData().getTid();
         car.setTid(tid);
