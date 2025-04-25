@@ -1,0 +1,26 @@
+package com.ybb.feign;
+
+import com.ybb.dto.ResponseResult;
+import com.ybb.response.TerminalResponse;
+import com.ybb.response.TrackResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@FeignClient("service-map")
+public interface ServiceMapClient {
+
+    /**
+     * 创建终端，在添加车辆信息时调用
+     *
+     * @param name
+     * @param desc
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/terminal/add")
+    public ResponseResult<TerminalResponse> addTerminal(@RequestParam String name , @RequestParam String desc);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/track/add")
+    public ResponseResult<TrackResponse> addTrack(@RequestParam String tid);
+}

@@ -15,3 +15,4 @@ spring:
 amap:
   app:
     key: f0c42d8524d2eea5e41a445b53f9f38e
+    sid: xxxx
