@@ -5,6 +5,7 @@ import com.ybb.dto.ResponseResult;
 import com.ybb.feign.ServiceMapClient;
 import com.ybb.mapper.CarMapper;
 import com.ybb.response.TerminalResponse;
+import com.ybb.response.TrackResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,17 @@ public class CarService {
         // 增加：车辆与终端关联，【车牌号】与
         ResponseResult<TerminalResponse> terminal = serviceMapClient.addTerminal(car.getVehicleNo(), car.getId() + "");
         String tid = terminal.getData().getTid();
-
         car.setTid(tid);
 
+        // 增加：初始化轨迹
+        ResponseResult<TrackResponse> trackResponse = serviceMapClient.addTrack(tid);
+        String trid = trackResponse.getData().getTrid();
+        String trname = trackResponse.getData().getTrname();
+
+        car.setTrname(trname);
+        car.setTrid(trid);
+
+        carMapper.updateById(car);
 
         return ResponseResult.success("");
     }
