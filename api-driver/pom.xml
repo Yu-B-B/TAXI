@@ -8,7 +8,7 @@
     </parent>
     <artifactId>api-driver</artifactId>
 
-    <description>司机端对外接口</description>
+    <description>司机前端调用的接口</description>
 
     <dependencies>
         <dependency>
