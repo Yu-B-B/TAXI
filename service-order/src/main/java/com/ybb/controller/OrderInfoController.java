@@ -8,10 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class OrderController {
+public class OrderInfoController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 创建订单
+     *
+     * @param orderRequest
+     * @return
+     */
     @PostMapping("/createOrder")
     public ResponseResult createOrder(OrderRequest orderRequest) {
         return orderService.createOrder(orderRequest);
