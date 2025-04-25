@@ -18,8 +18,13 @@ public class ForecastController {
     @Autowired
     private ForecastService forecastService;
 
+    /**
+     * 预估价格
+     * @param request
+     * @return
+     */
     @PostMapping("/force-price")
     public ResponseResult getForeCasePrice(@RequestBody ForecastPriceDto request) {
-        return forecastService.getForecastPrice(request.getDepLongitude(), request.getDepLatitude(), request.getDestLongitude(), request.getDestLatitude());
+        return forecastService.getForecastPrice(request);
     }
 }

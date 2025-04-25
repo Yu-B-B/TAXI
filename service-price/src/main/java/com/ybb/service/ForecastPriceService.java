@@ -1,5 +1,7 @@
 package com.ybb.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ybb.constant.CommonStateEnum;
 import com.ybb.dto.PriceRule;
 import com.ybb.dto.ResponseResult;
 import com.ybb.feign.ServiceMapFeign;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -36,18 +39,36 @@ public class ForecastPriceService {
         // 根据计价规则计算价格
         log.info("调用计价规则");
 
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("city_code","");
-//        map.put("vehicle_code","");
-//        priceRuleMapper.selectByMap(map);
+        // TODO:读取数据库中计价规则
+        /*QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("city_code",request.getCityCode());
+        queryWrapper.eq("vehicle_type",request.getVehicleType());
+        queryWrapper.orderByDesc("fare_version");
+
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        // 获取最新的计价规则，最新计价规则中数据都是最新的
+        if (priceRules.size() == 0){
+            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(),CommonStateEnum.VERIFICATION_CODE_ERROR.getValue());
+        }
+
+        PriceRule priceRule = priceRules.get(0);
+
+
+         */
         PriceRuleMock priceRuleMock = new PriceRuleMock();
-        PriceRule mockData = priceRuleMock.getPriceRuleMockData();
+        PriceRule priceRule = priceRuleMock.getPriceRuleMockData();
 
         // 预估价格
-        BigDecimal price = getForecastPrice(data.getDistance(), data.getDuration(), mockData);
+        BigDecimal price = getForecastPrice(data.getDistance(), data.getDuration(), priceRule);
 
         ForecastPriceResponse response = new ForecastPriceResponse();
         response.setPrice(price);
+        response.setCityCode(request.getCityCode());
+        response.setVehicleType(request.getVehicleType());
+        // v1 - 不携带版本号，防止出现早预估后下单场景
+        // v2 - 携带版本号返回，后面的请求再来时重新查询
+        response.setFareVersion(priceRule.getFareVersion());
+        response.setFareType(priceRule.getFareType());
         return ResponseResult.success(response);
     }
 

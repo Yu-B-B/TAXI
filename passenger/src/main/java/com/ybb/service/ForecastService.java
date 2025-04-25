@@ -14,20 +14,17 @@ public class ForecastService {
     @Autowired
     private ServicePriceClient servicePriceClient;
 
-    public ResponseResult getForecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude) {
-        log.info("出发地经度 : {}", depLongitude);
-        log.info("出发地纬度 : {}", depLatitude);
-        log.info("目的地经度 : {}", destLongitude);
-        log.info("目的地纬度 : {}", destLatitude);
+    public ResponseResult getForecastPrice(ForecastPriceDto request) {
 
-        ForecastPriceDto priceDto = new ForecastPriceDto();
-        priceDto.setDepLongitude(depLongitude);
-        priceDto.setDepLatitude(depLatitude);
-        priceDto.setDestLongitude(destLongitude);
-        priceDto.setDestLatitude(destLatitude);
         // 调用计价服务计算价格
-        ResponseResult<ForecastPriceResponse> responseResult = servicePriceClient.forecastPrice(priceDto);
+        ResponseResult<ForecastPriceResponse> responseResult = servicePriceClient.forecastPrice(request);
 
-        return ResponseResult.success(responseResult.getData().getPrice());
+        ForecastPriceResponse response = new ForecastPriceResponse();
+        response.setPrice(responseResult.getData().getPrice());
+        response.setVehicleType(request.getVehicleType());
+        response.setCityCode(request.getCityCode());
+
+
+        return ResponseResult.success(response);
     }
 }

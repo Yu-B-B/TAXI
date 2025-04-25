@@ -21,6 +21,18 @@ public enum CommonStateEnum {
 
     AVAILABLE_DRIVER_EMPTY(1506,"可用的司机为空"),
 
+
+    /*
+    ** 计价规则
+    * */
+    PRICE_RULE_EMPTY(1300,"计价规则不存在"),
+
+    PRICE_RULE_EXISTS(1301,"计价规则已存在，不允许添加"),
+
+    PRICE_RULE_NOT_EDIT(1302,"计价规则没有变化"),
+
+    PRICE_RULE_CHANGED(1303,"计价规则有变化"),
+
     USER_NOT_EXISTS(1200,"用户不存在"),
     SUCCESS(1,"succcess"),
     FAIL(0,"fail")
