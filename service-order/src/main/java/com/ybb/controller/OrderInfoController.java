@@ -1,6 +1,7 @@
 package com.ybb.controller;
 
 import com.ybb.constant.HeaderParamConstants;
+import com.ybb.dto.OrderInfo;
 import com.ybb.dto.ResponseResult;
 import com.ybb.request.OrderRequest;
 import com.ybb.service.OrderService;
@@ -29,5 +30,15 @@ public class OrderInfoController {
 //        orderRequest.setDeviceCode(deviceCode);
 
         return orderService.createOrder(orderRequest);
+    }
+
+    /**
+     * 循环获取附近终端
+     * @param orderInfo
+     * @return
+     */
+    @PostMapping("/dispatchOrder")
+    public ResponseResult<Boolean> dispatchOrder(@RequestBody OrderInfo orderInfo) {
+        return orderService.dispatchOrder(orderInfo);
     }
 }

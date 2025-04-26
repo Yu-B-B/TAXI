@@ -4,6 +4,7 @@ import com.ybb.constant.DriverCarConstants;
 import com.ybb.dto.DriverUser;
 import com.ybb.dto.ResponseResult;
 import com.ybb.response.DriverUserExistsResponse;
+import com.ybb.response.OrderDriverResponse;
 import com.ybb.service.DriverUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -62,5 +63,15 @@ public class DriverUserController {
     @GetMapping("/checkExistsUsefulDriver")
     public ResponseResult<Boolean> checkExistsUsefulDriver(String cityCode) {
         return driverUserService.checkExistsUsefulDriver(cityCode);
+    }
+
+    /**
+     * 根据车辆Id查询订单需要的司机信息
+     * @param carId
+     * @return
+     */
+    @GetMapping("/get-available-driver/{carId}")
+    public ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId){
+        return driverUserService.getAvailableDriver(carId);
     }
 }

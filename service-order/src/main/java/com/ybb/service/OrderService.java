@@ -1,6 +1,7 @@
 package com.ybb.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ybb.feign.MapFeignClient;
 import com.ybb.constant.CommonStateEnum;
 import com.ybb.constant.OrderConstants;
 import com.ybb.dto.OrderInfo;
@@ -10,6 +11,8 @@ import com.ybb.feign.DriverUserFeignClient;
 import com.ybb.feign.PriceFeignClient;
 import com.ybb.mapper.OrderInfoMapper;
 import com.ybb.request.OrderRequest;
+import com.ybb.response.OrderDriverResponse;
+import com.ybb.response.TerminalResponse;
 import com.ybb.util.RedisPrefixUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +35,8 @@ public class OrderService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private DriverUserFeignClient driverUserFeignClient;
+    @Autowired
+    private MapFeignClient mapFeignClient;
 
     public ResponseResult createOrder(OrderRequest orderRequest) {
         // v5 - 判断所属城市是否存在计价规则
@@ -44,15 +50,15 @@ public class OrderService {
         priceRule.setVehicleType(vehicleType);
         ResponseResult<Boolean> checkFareRule = priceFeignClient.checkFareRule(priceRule);
         Boolean ifExists = checkFareRule.getData();
-        if(!ifExists){
-            return ResponseResult.fail(CommonStateEnum.CITY_SERVICE_NOT_SERVICE.getCode(),CommonStateEnum.CITY_SERVICE_NOT_SERVICE.getMessage());
+        if (!ifExists) {
+            return ResponseResult.fail(CommonStateEnum.CITY_SERVICE_NOT_SERVICE.getCode(), CommonStateEnum.CITY_SERVICE_NOT_SERVICE.getMessage());
         }
 
         // v6 - 判断当前城市是否有可用司机
         ResponseResult<Boolean> existsUser = driverUserFeignClient.checkExistsUsefulDriver(cityCode);
         Boolean existsData = existsUser.getData();
-        if(!existsData){
-            return ResponseResult.fail(CommonStateEnum.CITY_DRIVER_EMPTY.getCode(),CommonStateEnum.CITY_DRIVER_EMPTY.getMessage());
+        if (!existsData) {
+            return ResponseResult.fail(CommonStateEnum.CITY_DRIVER_EMPTY.getCode(), CommonStateEnum.CITY_DRIVER_EMPTY.getMessage());
         }
 
 
@@ -122,5 +128,45 @@ public class OrderService {
 
         orderMapper.insert(info);
         return ResponseResult.success("");
+    }
+
+    /**
+     * 派发订单
+     *
+     * @param orderInfo
+     */
+    public ResponseResult<Boolean> dispatchOrder(OrderInfo orderInfo) {
+        // 循环判断范围内是否有对应的车辆
+        // 拼接经纬度
+        String depLongitude = orderInfo.getDepLongitude(); // 经度
+        String depLatitude = orderInfo.getDepLatitude(); // 出发点纬度
+        String center = depLatitude + "," + depLongitude;
+        ResponseResult<List<TerminalResponse>> aroundsearched = mapFeignClient.aroundsearch(center, 1000);
+        List<TerminalResponse> terminalList = aroundsearched.getData();
+
+        List<Integer> list = new ArrayList<>();
+        list.add(1000);
+        list.add(3000);
+        list.add(5000);
+
+        for (int i = 0; i < list.size(); i++) {
+            Integer radius = list.get(i);
+            aroundsearched = mapFeignClient.aroundsearch(center, radius);
+
+            // 解析数据
+            List<TerminalResponse> data = aroundsearched.getData();
+            for (int j = 0; j < data.size(); j++) {
+                TerminalResponse terminalResponse = data.get(j);
+                Long carId = terminalResponse.getCarId();
+
+                String longitude = terminalResponse.getLongitude();
+                String latitude = terminalResponse.getLatitude();
+
+                // 根据【车辆id】获取对应司机信息，获取可以进行派单的司机信息
+                ResponseResult<OrderDriverResponse> result = driverUserFeignClient.getAvailableDriver(carId);
+            }
+
+        }
+        return ResponseResult.success(true);
     }
 }
