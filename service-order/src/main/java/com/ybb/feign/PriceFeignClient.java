@@ -2,15 +2,17 @@ package com.ybb.feign;
 
 import com.ybb.dto.PriceRule;
 import com.ybb.dto.ResponseResult;
+import com.ybb.request.PriceRuleIsNewRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient("service-forecast-price")
 public interface PriceFeignClient {
-    @GetMapping("/price-rule/checkFareVersion")
-    ResponseResult<Boolean> checkFareVersion(String fareType, int fareVersion);
+    @PostMapping("/price-rule/checkFareVersion")
+    ResponseResult<Boolean> checkFareVersion(@RequestBody PriceRuleIsNewRequest request);
 
     /**
      * 判断对应城市是否有计价规则

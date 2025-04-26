@@ -3,6 +3,7 @@ package com.ybb.controller;
 
 import com.ybb.dto.PriceRule;
 import com.ybb.dto.ResponseResult;
+import com.ybb.request.PriceRuleIsNewRequest;
 import com.ybb.service.PriceRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,11 @@ public class PriceRuleController {
     @Autowired
     PriceRuleService priceRuleService;
 
+    /**
+     * 添加计价规则
+     * @param priceRule
+     * @return
+     */
     @PostMapping("/add")
     public ResponseResult add(@RequestBody PriceRule priceRule) {
 
@@ -32,20 +38,19 @@ public class PriceRuleController {
      * @return
      */
     @GetMapping("/getNewVersion")
-    public ResponseResult isNew(@RequestParam String fareType) {
+    public ResponseResult getNewFareVersion(@RequestParam String fareType) {
         return priceRuleService.getNewFareVersion(fareType);
     }
 
     /**
      * 判断【计价版本】是否为最新
+     * 使用GetMapping会出现特殊符号转义情况
      *
-     * @param fareType
-     * @param fareVersion
      * @return
      */
-    @GetMapping("/checkFareVersion")
-    public ResponseResult checkFareVersion(@RequestParam String fareType,@RequestParam int fareVersion) {
-        return priceRuleService.checkFareVersion(fareType,fareVersion);
+    @PostMapping("/checkFareVersion")
+    public ResponseResult checkFareVersion(@RequestBody PriceRuleIsNewRequest ruleIsNewRequest) {
+        return priceRuleService.checkFareVersion(ruleIsNewRequest);
     }
 
     /**

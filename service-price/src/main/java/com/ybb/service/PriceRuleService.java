@@ -6,6 +6,7 @@ import com.ybb.constant.CommonStateEnum;
 import com.ybb.dto.PriceRule;
 import com.ybb.dto.ResponseResult;
 import com.ybb.mapper.PriceRuleMapper;
+import com.ybb.request.PriceRuleIsNewRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,18 +110,16 @@ public class PriceRuleService {
 
     /**
      * 判断计价规则是否为最新
-     * @param fareType
-     * @param fareVersion
      * @return
      */
-    public ResponseResult<Boolean> checkFareVersion(String fareType, int fareVersion) {
-        ResponseResult<PriceRule> version = getNewFareVersion(fareType);
+    public ResponseResult<Boolean> checkFareVersion(PriceRuleIsNewRequest request) {
+        ResponseResult<PriceRule> version = getNewFareVersion(request.getFareType());
         if(CommonStateEnum.PRICE_RULE_EMPTY.getCode() == version.getCode()) {
 //            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
             return ResponseResult.fail(false);
         }
         PriceRule data = version.getData();
-        if(fareVersion < data.getFareVersion()) {
+        if(request.getFareVersion() < data.getFareVersion()) {
             return ResponseResult.fail(false);
         }else{
             return ResponseResult.success(true);

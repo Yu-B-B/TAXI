@@ -65,11 +65,13 @@ public class VerificationCodeService {
 
         // 2. 校验验证码
         if (StringUtils.isBlank(redisCodeValue)) {
-            return ResponseResult.fail(CommonStateEnum.VERIFICATION_CODE_ERROR.getCode(), CommonStateEnum.VERIFICATION_CODE_ERROR.getMessage());
+            return ResponseResult.fail(CommonStateEnum.VERIFICATION_CODE_ERROR.getCode(),
+                    CommonStateEnum.VERIFICATION_CODE_ERROR.getMessage());
         }
         // 去除两端空格后比较
         if (!code.trim().equals(redisCodeValue.trim())) {
-            return ResponseResult.fail(CommonStateEnum.VERIFICATION_CODE_ERROR.getCode(), CommonStateEnum.VERIFICATION_CODE_ERROR.getMessage());
+            return ResponseResult.fail(CommonStateEnum.VERIFICATION_CODE_ERROR.getCode(),
+                    CommonStateEnum.VERIFICATION_CODE_ERROR.getMessage());
         }
 
         // 3.判断用户是否已注册过

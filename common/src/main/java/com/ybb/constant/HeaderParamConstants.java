@@ -6,4 +6,7 @@ package com.ybb.constant;
 public class HeaderParamConstants {
     // 设备唯一码
     public static final String DEVICE_CODE = "deviceCode";
+
+    // 权限头
+    public static final String AUTHORIZATION = "Authorization";
 }

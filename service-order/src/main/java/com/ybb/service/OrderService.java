@@ -11,6 +11,7 @@ import com.ybb.feign.DriverUserFeignClient;
 import com.ybb.feign.PriceFeignClient;
 import com.ybb.mapper.OrderInfoMapper;
 import com.ybb.request.OrderRequest;
+import com.ybb.request.PriceRuleIsNewRequest;
 import com.ybb.response.OrderDriverResponse;
 import com.ybb.response.TerminalResponse;
 import com.ybb.util.RedisPrefixUtils;
@@ -105,7 +106,10 @@ public class OrderService {
 
 
         // v2 - 创建订单之前，需要做版本号判断
-        ResponseResult<Boolean> checkFareVersion = priceFeignClient.checkFareVersion(orderRequest.getFareType(), orderRequest.getFareVersion());
+        PriceRuleIsNewRequest priceRuleIsNewRequest = new PriceRuleIsNewRequest();
+        priceRuleIsNewRequest.setFareVersion(orderRequest.getFareVersion());
+        priceRuleIsNewRequest.setFareType(fareType);
+        ResponseResult<Boolean> checkFareVersion = priceFeignClient.checkFareVersion(priceRuleIsNewRequest);
 //        if (checkFareVersion.getCode() == CommonStateEnum.PRICE_RULE_EMPTY.getCode()) {
 //            // 未查询出来
 //            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());

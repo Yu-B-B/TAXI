@@ -13,6 +13,11 @@ public class DriverUserWorkStatusController {
     @Autowired
     DriverUserWorkStatusService driverUserWorkStatusService;
 
+    /**
+     * 司机出车
+     * @param driverUserWorkStatus
+     * @return
+     */
     @PostMapping("/change-status")
     public ResponseResult changeWorkStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus){
 
