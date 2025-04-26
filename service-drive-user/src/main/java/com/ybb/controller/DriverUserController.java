@@ -54,4 +54,13 @@ public class DriverUserController {
 
         return ResponseResult.success(response);
     }
+
+    /**
+     * 检查当前城市是否有可用司机
+     * @return
+     */
+    @GetMapping("/checkExistsUsefulDriver")
+    public ResponseResult<Boolean> checkExistsUsefulDriver(String cityCode) {
+        return driverUserService.checkExistsUsefulDriver(cityCode);
+    }
 }

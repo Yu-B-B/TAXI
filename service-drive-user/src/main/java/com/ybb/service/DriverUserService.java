@@ -80,4 +80,18 @@ public class DriverUserService {
         DriverUser driverUser = driverUserMockData.getDriverUser(driverPhone);
         return ResponseResult.success(driverUser);
     }
+
+    /**
+     * 检查当前城市是否有可用司机
+     *
+     * @return
+     */
+    public ResponseResult checkExistsUsefulDriver(String cityCode) {
+        int count = driverUserMapper.selectDriverUserCountByCityCode(cityCode);
+        if (count > 0) {
+            return ResponseResult.success(true);
+        } else {
+            return ResponseResult.fail(false);
+        }
+    }
 }

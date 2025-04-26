@@ -6,6 +6,7 @@ import com.ybb.constant.OrderConstants;
 import com.ybb.dto.OrderInfo;
 import com.ybb.dto.PriceRule;
 import com.ybb.dto.ResponseResult;
+import com.ybb.feign.DriverUserFeignClient;
 import com.ybb.feign.PriceFeignClient;
 import com.ybb.mapper.OrderInfoMapper;
 import com.ybb.request.OrderRequest;
@@ -28,13 +29,19 @@ public class OrderService {
     private PriceFeignClient priceFeignClient;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private DriverUserFeignClient driverUserFeignClient;
 
     public ResponseResult createOrder(OrderRequest orderRequest) {
         // v5 - 判断所属城市是否存在计价规则
         PriceRule priceRule = new PriceRule();
         // 若无法从中获取到两个参数，从fareType中截取获得
-        priceRule.setCityCode(orderRequest.getAddress());
-        priceRule.setVehicleType(orderRequest.getVehicleType());
+        String fareType = orderRequest.getFareType();
+        int index = fareType.indexOf("$");
+        String cityCode = fareType.substring(0, index);
+        String vehicleType = fareType.substring(index + 1);
+        priceRule.setCityCode(cityCode);
+        priceRule.setVehicleType(vehicleType);
         ResponseResult<Boolean> checkFareRule = priceFeignClient.checkFareRule(priceRule);
         Boolean ifExists = checkFareRule.getData();
         if(!ifExists){
@@ -42,7 +49,11 @@ public class OrderService {
         }
 
         // v6 - 判断当前城市是否有可用司机
-
+        ResponseResult<Boolean> existsUser = driverUserFeignClient.checkExistsUsefulDriver(cityCode);
+        Boolean existsData = existsUser.getData();
+        if(!existsData){
+            return ResponseResult.fail(CommonStateEnum.CITY_DRIVER_EMPTY.getCode(),CommonStateEnum.CITY_DRIVER_EMPTY.getMessage());
+        }
 
 
         // v4 - 判断是否为黑名单用户（多个用户在一个设备上参加活动）
