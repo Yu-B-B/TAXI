@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ybb.constant.CommonStateEnum;
 import com.ybb.constant.OrderConstants;
 import com.ybb.dto.OrderInfo;
+import com.ybb.dto.PriceRule;
 import com.ybb.dto.ResponseResult;
 import com.ybb.feign.PriceFeignClient;
 import com.ybb.mapper.OrderInfoMapper;
@@ -28,7 +29,22 @@ public class OrderService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-        public ResponseResult createOrder(OrderRequest orderRequest) {
+    public ResponseResult createOrder(OrderRequest orderRequest) {
+        // v5 - 判断所属城市是否存在计价规则
+        PriceRule priceRule = new PriceRule();
+        // 若无法从中获取到两个参数，从fareType中截取获得
+        priceRule.setCityCode(orderRequest.getAddress());
+        priceRule.setVehicleType(orderRequest.getVehicleType());
+        ResponseResult<Boolean> checkFareRule = priceFeignClient.checkFareRule(priceRule);
+        Boolean ifExists = checkFareRule.getData();
+        if(!ifExists){
+            return ResponseResult.fail(CommonStateEnum.CITY_SERVICE_NOT_SERVICE.getCode(),CommonStateEnum.CITY_SERVICE_NOT_SERVICE.getMessage());
+        }
+
+        // v6 - 判断当前城市是否有可用司机
+
+
+
         // v4 - 判断是否为黑名单用户（多个用户在一个设备上参加活动）
         String deviceCode = orderRequest.getDeviceCode();
         String redisKey = RedisPrefixUtils.blackDeviceCodePrefix + deviceCode;
@@ -44,7 +60,7 @@ public class OrderService {
                 stringRedisTemplate.opsForValue().increment(redisKey);
             }
         } else {
-            stringRedisTemplate.opsForValue().setIfAbsent(redisKey,"1",1,TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().setIfAbsent(redisKey, "1", 1, TimeUnit.HOURS);
         }
 
         // 1、若这样先设值，再设置过期时间，【无法保证操作的原子性】
@@ -73,10 +89,10 @@ public class OrderService {
 
         // v2 - 创建订单之前，需要做版本号判断
         ResponseResult<Boolean> checkFareVersion = priceFeignClient.checkFareVersion(orderRequest.getFareType(), orderRequest.getFareVersion());
-        if (checkFareVersion.getCode() == CommonStateEnum.PRICE_RULE_EMPTY.getCode()) {
-            // 未查询出来
-            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
-        }
+//        if (checkFareVersion.getCode() == CommonStateEnum.PRICE_RULE_EMPTY.getCode()) {
+//            // 未查询出来
+//            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
+//        }
         if (!checkFareVersion.getData()) {
             // 不是最新的
             return ResponseResult.fail(CommonStateEnum.PRICE_RULE_CHANGED.getCode(), CommonStateEnum.PRICE_RULE_CHANGED.getMessage());

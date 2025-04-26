@@ -36,8 +36,26 @@ public class PriceRuleController {
         return priceRuleService.getNewFareVersion(fareType);
     }
 
+    /**
+     * 判断【计价版本】是否为最新
+     *
+     * @param fareType
+     * @param fareVersion
+     * @return
+     */
     @GetMapping("/checkFareVersion")
     public ResponseResult checkFareVersion(@RequestParam String fareType,@RequestParam int fareVersion) {
         return priceRuleService.checkFareVersion(fareType,fareVersion);
     }
+
+    /**
+     * 判断当前城市是否存在计价规则
+     *
+     * @return
+     */
+    @PostMapping("/checkFareRule")
+    public ResponseResult<Boolean> checkFareRule(@RequestParam PriceRule priceRule) {
+        return priceRuleService.checkFareRule(priceRule);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.ybb.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ybb.constant.CommonStateEnum;
 import com.ybb.dto.PriceRule;
@@ -7,12 +8,8 @@ import com.ybb.dto.ResponseResult;
 import com.ybb.mapper.PriceRuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.xml.ws.RequestWrapper;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PriceRuleService {
@@ -119,13 +116,35 @@ public class PriceRuleService {
     public ResponseResult<Boolean> checkFareVersion(String fareType, int fareVersion) {
         ResponseResult<PriceRule> version = getNewFareVersion(fareType);
         if(CommonStateEnum.PRICE_RULE_EMPTY.getCode() == version.getCode()) {
-            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
+//            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
+            return ResponseResult.fail(false);
         }
         PriceRule data = version.getData();
         if(fareVersion < data.getFareVersion()) {
             return ResponseResult.fail(false);
         }else{
             return ResponseResult.success(true);
+        }
+    }
+
+    /**
+     * 判断当前城市是否有计价规则
+     * @param priceRule
+     * @return
+     */
+    public ResponseResult<Boolean> checkFareRule(PriceRule priceRule) {
+        String cityCode = priceRule.getCityCode();
+        String vehicleType = priceRule.getVehicleType();
+
+        LambdaQueryWrapper<PriceRule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PriceRule::getCityCode,cityCode);
+        queryWrapper.eq(PriceRule::getVehicleType,vehicleType);
+        queryWrapper.orderByDesc(PriceRule::getFareVersion);
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if(priceRules.size() > 0) {
+            return ResponseResult.success(true);
+        }else {
+            return ResponseResult.fail(false);
         }
     }
 }
