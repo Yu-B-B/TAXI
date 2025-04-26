@@ -8,6 +8,7 @@ import com.ybb.mapper.PriceRuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.ws.RequestWrapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +29,17 @@ public class PriceRuleService {
 
         // 添加版本号，若该版本已经存在，当前则为二号版本
         QueryWrapper<PriceRule> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("city_code",cityCode);
-        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.eq("city_code", cityCode);
+        queryWrapper.eq("vehicle_type", vehicleType);
         queryWrapper.orderByDesc("fare_version");
 
         List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
         Integer fareVersion = 0;
         // v2 - 大于0，说明当前城市已存在对应的计价规则，无需对计价规则新增
-        if(priceRules.size()>0){
+        if (priceRules.size() > 0) {
             // v1 - 获取最大的版本号
 //            fareVersion = priceRules.get(0).getFareVersion();
-            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EXISTS.getCode(),CommonStateEnum.PRICE_RULE_EXISTS.getMessage());
+            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EXISTS.getCode(), CommonStateEnum.PRICE_RULE_EXISTS.getMessage());
 
         }
 
@@ -49,7 +50,7 @@ public class PriceRuleService {
         return ResponseResult.success();
     }
 
-    public ResponseResult edit(PriceRule priceRule){
+    public ResponseResult edit(PriceRule priceRule) {
         // 拼接fareType
         String cityCode = priceRule.getCityCode();
         String vehicleType = priceRule.getVehicleType();
@@ -60,13 +61,13 @@ public class PriceRuleService {
         // 问题1：增加了版本号，前面的两个字段无法唯一确定一条记录，问题2：找最大的版本号，需要排序
 
         QueryWrapper<PriceRule> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("city_code",cityCode);
-        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.eq("city_code", cityCode);
+        queryWrapper.eq("vehicle_type", vehicleType);
         queryWrapper.orderByDesc("fare_version");
 
         List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
         Integer fareVersion = 0;
-        if (priceRules.size()>0){
+        if (priceRules.size() > 0) {
             PriceRule lasterPriceRule = priceRules.get(0);
             Double unitPricePerMile = lasterPriceRule.getUnitPricePerMile();
             Double unitPricePerMinute = lasterPriceRule.getUnitPricePerMinute();
@@ -76,8 +77,8 @@ public class PriceRuleService {
             if (unitPricePerMile.doubleValue() == priceRule.getUnitPricePerMile().doubleValue()
                     && unitPricePerMinute.doubleValue() == priceRule.getUnitPricePerMinute().doubleValue()
                     && startFare.doubleValue() == priceRule.getStartFare().doubleValue()
-                    && startMile.intValue() == priceRule.getStartMile().intValue()){
-                return ResponseResult.fail(CommonStateEnum.PRICE_RULE_NOT_EDIT.getCode(),CommonStateEnum.PRICE_RULE_NOT_EDIT.getMessage());
+                    && startMile.intValue() == priceRule.getStartMile().intValue()) {
+                return ResponseResult.fail(CommonStateEnum.PRICE_RULE_NOT_EDIT.getCode(), CommonStateEnum.PRICE_RULE_NOT_EDIT.getMessage());
             }
 
 
@@ -88,5 +89,24 @@ public class PriceRuleService {
 
         priceRuleMapper.insert(priceRule);
         return ResponseResult.success();
+    }
+
+    /**
+     * 获取最新的计价规则
+     *
+     * @param fareType
+     * @param fareVersion
+     * @return
+     */
+    public ResponseResult<PriceRule> isNew(String fareType, String fareVersion) {
+        QueryWrapper<PriceRule> wrapper = new QueryWrapper<PriceRule>();
+        wrapper.eq("fare_type", fareType);
+        wrapper.orderByDesc("fare_version");
+        List<PriceRule> list = priceRuleMapper.selectList(wrapper);
+        if (list.size() > 0) {
+            return ResponseResult.success(list.get(0));
+        }
+        // 计价规则不存在
+        return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
     }
 }

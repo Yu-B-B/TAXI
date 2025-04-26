@@ -20,7 +20,7 @@ public class ForecastService {
         ResponseResult<ForecastPriceResponse> responseResult = servicePriceClient.forecastPrice(request);
 
         ForecastPriceResponse response = new ForecastPriceResponse();
-        response.setPrice(responseResult.getData().getPrice());
+
         response.setVehicleType(request.getVehicleType());
         response.setCityCode(request.getCityCode());
 
