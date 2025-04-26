@@ -3,6 +3,8 @@ package com.ybb.util;
 public class RedisPrefixUtils {
     private static String verificationCodePrefix = "passenger-verification-code-";
     private static String tokenPrefix = "token-";
+    public static String blackDeviceCodePrefix = "black-device-";
+
 
     public static String getRedisKeyByPhone(String phone) {
         return verificationCodePrefix + phone;

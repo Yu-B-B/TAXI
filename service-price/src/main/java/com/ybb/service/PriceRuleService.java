@@ -7,6 +7,7 @@ import com.ybb.dto.ResponseResult;
 import com.ybb.mapper.PriceRuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.xml.ws.RequestWrapper;
 import java.util.HashMap;
@@ -95,10 +96,9 @@ public class PriceRuleService {
      * 获取最新的计价规则
      *
      * @param fareType
-     * @param fareVersion
      * @return
      */
-    public ResponseResult<PriceRule> isNew(String fareType, String fareVersion) {
+    public ResponseResult<PriceRule> getNewFareVersion(String fareType) {
         QueryWrapper<PriceRule> wrapper = new QueryWrapper<PriceRule>();
         wrapper.eq("fare_type", fareType);
         wrapper.orderByDesc("fare_version");
@@ -108,5 +108,24 @@ public class PriceRuleService {
         }
         // 计价规则不存在
         return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
+    }
+
+    /**
+     * 判断计价规则是否为最新
+     * @param fareType
+     * @param fareVersion
+     * @return
+     */
+    public ResponseResult<Boolean> checkFareVersion(String fareType, int fareVersion) {
+        ResponseResult<PriceRule> version = getNewFareVersion(fareType);
+        if(CommonStateEnum.PRICE_RULE_EMPTY.getCode() == version.getCode()) {
+            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(), CommonStateEnum.PRICE_RULE_EMPTY.getMessage());
+        }
+        PriceRule data = version.getData();
+        if(fareVersion < data.getFareVersion()) {
+            return ResponseResult.fail(false);
+        }else{
+            return ResponseResult.success(true);
+        }
     }
 }

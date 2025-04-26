@@ -27,13 +27,17 @@ public class PriceRuleController {
     }
 
     /**
-     * 根据【计价类型】（城市编码 + 车辆类型）判断是否为最新的【计价版本】
+     * 根据【计价类型】（城市编码 + 车辆类型）获取最新的【计价版本】
      * @param fareType
-     * @param fareVersion
      * @return
      */
-    @GetMapping("/isNew")
-    public ResponseResult isNew(@RequestParam String fareType,@RequestParam String fareVersion) {
-        return priceRuleService.isNew(fareType,fareVersion);
+    @GetMapping("/getNewVersion")
+    public ResponseResult isNew(@RequestParam String fareType) {
+        return priceRuleService.getNewFareVersion(fareType);
+    }
+
+    @GetMapping("/checkFareVersion")
+    public ResponseResult checkFareVersion(@RequestParam String fareType,@RequestParam int fareVersion) {
+        return priceRuleService.checkFareVersion(fareType,fareVersion);
     }
 }

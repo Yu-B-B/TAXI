@@ -22,8 +22,22 @@ public enum CommonStateEnum {
     AVAILABLE_DRIVER_EMPTY(1506,"可用的司机为空"),
 
 
-    /*
-    ** 计价规则
+    /**
+     * 订单：1600-1699
+     */
+    ORDER_GOING_ON(1600,"有正在进行的订单"),
+
+
+
+
+    DEVICE_IS_BLACK(1601,"该设备超过下单次数"),
+
+    CITY_SERVICE_NOT_SERVICE(1602,"当前城市不提供叫车服务"),
+
+    ORDER_CANCEL_ERROR(1603, "订单取消失败"),
+
+    /**
+    * 计价规则
     * */
     PRICE_RULE_EMPTY(1300,"计价规则不存在"),
 
