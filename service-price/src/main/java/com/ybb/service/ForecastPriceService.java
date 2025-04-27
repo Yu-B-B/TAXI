@@ -125,4 +125,26 @@ public class ForecastPriceService {
 
         return result;
     }
+
+    public ResponseResult<BigDecimal> calculatePrice( Integer distance ,  Integer duration, String cityCode, String vehicleType){
+        // 查询计价规则
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("city_code",cityCode);
+        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.orderByDesc("fare_version");
+
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.size() == 0){
+            return ResponseResult.fail(CommonStateEnum.PRICE_RULE_EMPTY.getCode(),CommonStateEnum.VERIFICATION_CODE_ERROR.getMessage());
+        }
+
+        PriceRule priceRule = priceRules.get(0);
+
+        log.info("根据距离、时长和计价规则，计算价格");
+
+        BigDecimal price = getForecastPrice(distance, duration, priceRule);
+        return ResponseResult.success(price);
+    }
+
+
 }

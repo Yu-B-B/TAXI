@@ -49,7 +49,6 @@ public class OrderInfoController {
      */
     @PostMapping("/to-pick-up-passenger")
     public ResponseResult changeStatus(@RequestBody OrderRequest orderRequest){
-
         return orderService.toPickUpPassenger(orderRequest);
     }
 

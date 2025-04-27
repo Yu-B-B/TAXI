@@ -2,6 +2,7 @@ package com.ybb.feign;
 
 import com.ybb.dto.ResponseResult;
 import com.ybb.response.TerminalResponse;
+import com.ybb.response.TrsearchResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,4 +21,14 @@ public interface MapFeignClient {
      */
     @PostMapping("/aroundsearch")
     ResponseResult<List<TerminalResponse>> aroundsearch(@RequestParam String center ,@RequestParam Integer radius);
+
+    /**
+     * 轨迹查询
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    @PostMapping("/trsearch")
+    ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime , Long endtime);
 }

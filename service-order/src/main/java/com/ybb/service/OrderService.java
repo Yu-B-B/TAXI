@@ -29,6 +29,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -381,27 +382,29 @@ public class OrderService {
 
         orderInfo.setOrderStatus(OrderConstants.PASSENGER_GETOFF);
         // 订单行驶的路程和时间,调用 service-map
-//        ResponseResult<Car> carById = driverUserFeignClient.getCarInfo(orderInfo.getCarId());
-//        Long starttime = orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-//        Long endtime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-//        System.out.println("开始时间："+starttime);
-//        System.out.println("结束时间："+endtime);
 
-        // 1668078028000l,测试的时候不要跨天
-//        ResponseResult<TrsearchResponse> trsearch = mapFeignClient.trsearch(carById.getData().getTid(), starttime,endtime);
-//        TrsearchResponse data = trsearch.getData();
-//        Long driveMile = data.getDriveMile();
-//        Long driveTime = data.getDriveTime();
+        // 获取车辆信息中的tid
+        ResponseResult<Car> carById = driverUserFeignClient.getCarInfo(orderInfo.getCarId());
+        Long starttime = orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        Long endtime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        System.out.println("开始时间："+starttime);
+        System.out.println("结束时间："+endtime);
 
-//        orderInfo.setDriveMile(driveMile);
-//        orderInfo.setDriveTime(driveTime);
+        // 轨迹查询 - 缺少tid信息，需要从车辆信息中获取 ↑
+        ResponseResult<TrsearchResponse> trsearch = mapFeignClient.trsearch(carById.getData().getTid(), starttime,endtime);
+        TrsearchResponse data = trsearch.getData();
+        Long driveMile = data.getDriveMile();
+        Long driveTime = data.getDriveTime();
+
+        orderInfo.setDriveMile(driveMile);
+        orderInfo.setDriveTime(driveTime);
 
         // 获取价格
-//        String address = orderInfo.getAddress();
-//        String vehicleType = orderInfo.getVehicleType();
-//        ResponseResult<Double> doubleResponseResult = priceFeignClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), address, vehicleType);
-//        Double price = doubleResponseResult.getData();
-//        orderInfo.setPrice(price);
+        String address = orderInfo.getAddress();
+        String vehicleType = orderInfo.getVehicleType();// 防止因业务调整，让订单中计价规则不规则变动
+        ResponseResult<BigDecimal> doubleResponseResult = priceFeignClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), address, vehicleType);
+        BigDecimal price = doubleResponseResult.getData();
+        orderInfo.setPrice(Double.parseDouble(price.toString()));
 
         orderMapper.updateById(orderInfo);
         return ResponseResult.success();

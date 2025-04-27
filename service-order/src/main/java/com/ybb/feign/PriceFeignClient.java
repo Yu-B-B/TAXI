@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+
 @FeignClient("service-forecast-price")
 public interface PriceFeignClient {
     @PostMapping("/price-rule/checkFareVersion")
@@ -20,5 +22,8 @@ public interface PriceFeignClient {
      * @return
      */
     @PostMapping("/price-rule/checkFareRule")
-    public ResponseResult<Boolean> checkFareRule(@RequestParam PriceRule priceRule);
+    ResponseResult<Boolean> checkFareRule(@RequestParam PriceRule priceRule);
+
+    @PostMapping("/calculate-price")
+    ResponseResult<BigDecimal> calculatePrice(@RequestParam Integer distance , @RequestParam Integer duration, @RequestParam String cityCode, @RequestParam String vehicleType);
 }
