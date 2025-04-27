@@ -37,4 +37,6 @@ public interface ServerOrderFeignClient {
 
     @PostMapping("/passenger-getoff")
     ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest);
+
+
 }

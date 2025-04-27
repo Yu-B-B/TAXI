@@ -3,11 +3,9 @@ package com.ybb.controller;
 import com.ybb.dto.ResponseResult;
 import com.ybb.request.OrderRequest;
 import com.ybb.service.OrderService;
+import com.ybb.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 司机客户端做接到乘客等操作
@@ -17,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private PayService payService;
 
     // 去接乘客
     @PostMapping("/to-pick-up-passenger")
@@ -28,6 +28,7 @@ public class OrderController {
     @PostMapping("/arrived-departure")
     public ResponseResult arrivedDeparture(@RequestBody OrderRequest orderRequest){
         return orderService.arrivedDeparture(orderRequest);
+
     }
 
     // 接到乘客
@@ -46,6 +47,14 @@ public class OrderController {
     public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
         return orderService.passengerGetoff(orderRequest);
     }
+
+    // 发起收款
+    @PostMapping("/push-pay-info")
+    public ResponseResult pushPayInfo(@RequestParam Long orderId , @RequestParam String price, @RequestParam Long passengerId){
+
+        return payService.pushPayInfo(orderId,price,passengerId);
+    }
+
 
 
 
