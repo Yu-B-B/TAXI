@@ -132,7 +132,6 @@ public class DriverUserService {
             carQueryWrapper.eq(Car::getId,carId);
             Car car = carMapper.selectOne(carQueryWrapper);
 
-
             OrderDriverResponse orderDriverResponse = new OrderDriverResponse();
             orderDriverResponse.setCarId(carId);
             orderDriverResponse.setDriverId(driverId);
