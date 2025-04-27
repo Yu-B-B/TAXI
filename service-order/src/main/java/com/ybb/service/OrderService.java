@@ -17,6 +17,7 @@ import com.ybb.request.PriceRuleIsNewRequest;
 import com.ybb.request.PushRequest;
 import com.ybb.response.OrderDriverResponse;
 import com.ybb.response.TerminalResponse;
+import com.ybb.response.TrsearchResponse;
 import com.ybb.util.RedisPrefixUtils;
 import javafx.fxml.LoadException;
 import net.sf.json.JSONObject;
@@ -26,8 +27,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -291,5 +294,116 @@ public class OrderService {
 
         }
         return flag;
+    }
+
+    /**
+     * 去接乘客
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult toPickUpPassenger(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+//        LocalDateTime toPickUpPassengerTime = orderRequest.getToPickUpPassengerTime();
+        String toPickUpPassengerLongitude = orderRequest.getToPickUpPassengerLongitude();
+        String toPickUpPassengerLatitude = orderRequest.getToPickUpPassengerLatitude();
+        String toPickUpPassengerAddress = orderRequest.getToPickUpPassengerAddress();
+        LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(OrderInfo::getId,orderId);
+        OrderInfo orderInfo = orderMapper.selectOne(wrapper);
+
+        orderInfo.setToPickUpPassengerAddress(toPickUpPassengerAddress);
+        orderInfo.setToPickUpPassengerLatitude(toPickUpPassengerLatitude);
+        orderInfo.setToPickUpPassengerLongitude(toPickUpPassengerLongitude);
+        orderInfo.setToPickUpPassengerTime(LocalDateTime.now());
+        orderInfo.setOrderStatus(OrderConstants.DRIVER_TO_PICK_UP_PASSENGER);
+
+        orderMapper.updateById(orderInfo);
+
+        return ResponseResult.success();
+
+    }
+
+    /**
+     * 司机到达乘客上车点
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult arrivedDeparture(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",orderId);
+
+        OrderInfo orderInfo = orderMapper.selectOne(queryWrapper);
+        orderInfo.setOrderStatus(OrderConstants.DRIVER_ARRIVED_DEPARTURE);
+
+        orderInfo.setDriverArrivedDepartureTime(LocalDateTime.now());
+        orderMapper.updateById(orderInfo);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 司机接到乘客
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult pickUpPassenger(@RequestBody OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderMapper.selectOne(queryWrapper);
+
+        orderInfo.setPickUpPassengerLongitude(orderRequest.getPickUpPassengerLongitude());
+        orderInfo.setPickUpPassengerLatitude(orderRequest.getPickUpPassengerLatitude());
+        orderInfo.setPickUpPassengerTime(LocalDateTime.now());
+        orderInfo.setOrderStatus(OrderConstants.PICK_UP_PASSENGER);
+
+        orderMapper.updateById(orderInfo);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 乘客下车到达目的地，行程终止
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",orderId);
+        OrderInfo orderInfo = orderMapper.selectOne(queryWrapper);
+
+        orderInfo.setPassengerGetoffTime(LocalDateTime.now());
+        orderInfo.setPassengerGetoffLongitude(orderRequest.getPassengerGetoffLongitude());
+        orderInfo.setPassengerGetoffLatitude(orderRequest.getPassengerGetoffLatitude());
+
+        orderInfo.setOrderStatus(OrderConstants.PASSENGER_GETOFF);
+        // 订单行驶的路程和时间,调用 service-map
+//        ResponseResult<Car> carById = driverUserFeignClient.getCarInfo(orderInfo.getCarId());
+//        Long starttime = orderInfo.getPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+//        Long endtime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+//        System.out.println("开始时间："+starttime);
+//        System.out.println("结束时间："+endtime);
+
+        // 1668078028000l,测试的时候不要跨天
+//        ResponseResult<TrsearchResponse> trsearch = mapFeignClient.trsearch(carById.getData().getTid(), starttime,endtime);
+//        TrsearchResponse data = trsearch.getData();
+//        Long driveMile = data.getDriveMile();
+//        Long driveTime = data.getDriveTime();
+
+//        orderInfo.setDriveMile(driveMile);
+//        orderInfo.setDriveTime(driveTime);
+
+        // 获取价格
+//        String address = orderInfo.getAddress();
+//        String vehicleType = orderInfo.getVehicleType();
+//        ResponseResult<Double> doubleResponseResult = priceFeignClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), address, vehicleType);
+//        Double price = doubleResponseResult.getData();
+//        orderInfo.setPrice(price);
+
+        orderMapper.updateById(orderInfo);
+        return ResponseResult.success();
     }
 }
