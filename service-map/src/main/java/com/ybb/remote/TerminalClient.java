@@ -122,6 +122,13 @@ public class TerminalClient {
         return ResponseResult.success(terminalResponseList);
     }
 
+    /**
+     * 轨迹查询
+     * @param tid
+     * @param starttime
+     * @param endtime
+     * @return
+     */
     public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime , Long endtime){
         // 拼装请求的url
         StringBuilder url = new StringBuilder();
@@ -136,6 +143,7 @@ public class TerminalClient {
         ResponseEntity<String> forEntity = restTemplate.getForEntity(url.toString(), String.class);
         System.out.println("高德地图查询轨迹结果响应："+forEntity.getBody());
 
+        // 解析返回结果
         JSONObject result = JSONObject.fromObject(forEntity.getBody());
         JSONObject data = result.getJSONObject("data");
         int counts = data.getInt("counts");
