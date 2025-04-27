@@ -3,17 +3,18 @@ package com.ybb.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ybb.config.RedisConfig;
+import com.ybb.constant.IdentifyConstant;
+import com.ybb.dto.*;
 import com.ybb.feign.MapFeignClient;
 import com.ybb.constant.CommonStateEnum;
 import com.ybb.constant.OrderConstants;
-import com.ybb.dto.OrderInfo;
-import com.ybb.dto.PriceRule;
-import com.ybb.dto.ResponseResult;
 import com.ybb.feign.DriverUserFeignClient;
 import com.ybb.feign.PriceFeignClient;
+import com.ybb.feign.PushFeignClient;
 import com.ybb.mapper.OrderInfoMapper;
 import com.ybb.request.OrderRequest;
 import com.ybb.request.PriceRuleIsNewRequest;
+import com.ybb.request.PushRequest;
 import com.ybb.response.OrderDriverResponse;
 import com.ybb.response.TerminalResponse;
 import com.ybb.util.RedisPrefixUtils;
@@ -46,6 +47,8 @@ public class OrderService {
     private MapFeignClient mapFeignClient;
     @Autowired
     private RedissonClient redissonClient;
+    @Autowired
+    private PushFeignClient pushFeignClient;
 
     public ResponseResult createOrder(OrderRequest orderRequest) {
         // v5 - 判断所属城市是否存在计价规则
@@ -159,7 +162,8 @@ public class OrderService {
         list.add(1000);
         list.add(3000);
         list.add(5000);
-
+        // 增加锚点
+        radius:
         for (int i = 0; i < list.size(); i++) {
             Integer radius = list.get(i);
             aroundsearched = mapFeignClient.aroundsearch(center, radius);
@@ -182,7 +186,7 @@ public class OrderService {
                     OrderDriverResponse driverInfo = result.getData();
                     Long driverId = driverInfo.getDriverId();
 
-                    String lockKey = (driverId+"").intern();
+                    String lockKey = (driverId + "").intern();
                     RLock rLock = redissonClient.getLock(lockKey);
                     rLock.lock();
 
@@ -197,7 +201,7 @@ public class OrderService {
                     );
                     Integer availableDriver = orderMapper.selectCount(wrapper);
                     // 司机处于不可接单的状态下，跳过当前循环
-                    if(availableDriver > 0) {
+                    if (availableDriver > 0) {
                         rLock.unlock();
                         continue;
                     }
@@ -215,7 +219,52 @@ public class OrderService {
 
                     orderMapper.updateById(orderInfo); // 更新订单信息，赋值司机内容
 
+                    // 调用服务推送消息给司机，包含乘客信息，订单信息，起始，终点
+                    JSONObject driverContent = new JSONObject();
+                    driverContent.put("orderId", orderInfo.getId());
+                    driverContent.put("passengerId", orderInfo.getPassengerId());
+                    driverContent.put("passengerPhone", orderInfo.getPassengerPhone());
+                    driverContent.put("departure", orderInfo.getDeparture());
+                    driverContent.put("depLongitude", orderInfo.getDepLongitude());
+                    driverContent.put("depLatitude", orderInfo.getDepLatitude());
+
+                    driverContent.put("destination", orderInfo.getDestination());
+                    driverContent.put("destLongitude", orderInfo.getDestLongitude());
+                    driverContent.put("destLatitude", orderInfo.getDestLatitude());
+
+                    PushRequest pushRequest = new PushRequest();
+                    pushRequest.setContent(driverContent.toString());
+                    pushRequest.setUserId(driverId);
+                    pushRequest.setIdentity(IdentifyConstant.DRIVER);
+                    pushFeignClient.push(pushRequest);
+
+                    // 调用服务通知乘客
+                    JSONObject passengerContent = new  JSONObject();
+                    passengerContent.put("orderId",orderInfo.getId());
+                    passengerContent.put("driverId",orderInfo.getDriverId());
+                    passengerContent.put("driverPhone",orderInfo.getDriverPhone());
+                    passengerContent.put("vehicleNo",orderInfo.getVehicleNo());
+                    // 车辆信息，调用车辆服务
+                    ResponseResult<Car> carById = driverUserFeignClient.getCarInfo(carId);
+                    Car carRemote = carById.getData();
+
+                    passengerContent.put("brand", carRemote.getBrand());
+                    passengerContent.put("model",carRemote.getModel());
+                    passengerContent.put("vehicleColor",carRemote.getVehicleColor());
+
+                    passengerContent.put("receiveOrderCarLongitude",orderInfo.getReceiveOrderCarLongitude());
+                    passengerContent.put("receiveOrderCarLatitude",orderInfo.getReceiveOrderCarLatitude());
+
+                    PushRequest pushRequest1 = new PushRequest();
+                    pushRequest1.setUserId(orderInfo.getPassengerId());
+                    pushRequest1.setIdentity(IdentifyConstant.PASSENGER);
+                    pushRequest1.setContent(passengerContent.toString());
+
+                    pushFeignClient.push(pushRequest1);
+
                     rLock.unlock();
+
+                    break radius;
 
                 }
 

@@ -1,5 +1,6 @@
 package com.ybb.feign;
 
+import com.ybb.dto.Car;
 import com.ybb.dto.ResponseResult;
 import com.ybb.response.OrderDriverResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,4 +21,7 @@ public interface DriverUserFeignClient {
 
     @GetMapping("/get-available-driver/{carId}")
     ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId);
+
+    @GetMapping("/getCarInfo")
+    ResponseResult<Car> getCarInfo(@RequestParam Long carId);
 }
