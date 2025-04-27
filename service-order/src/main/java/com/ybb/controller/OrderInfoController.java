@@ -39,6 +39,6 @@ public class OrderInfoController {
      */
     @PostMapping("/dispatchOrder")
     public ResponseResult<Boolean> dispatchOrder(@RequestBody OrderInfo orderInfo) {
-        return orderService.dispatchOrder(orderInfo);
+        return ResponseResult.success(orderService.dispatchOrder(orderInfo));
     }
 }

@@ -142,6 +142,24 @@ public class OrderService {
         info.setGmtCreate(now);
 
         orderMapper.insert(info);
+
+        // 派单：派单时循环多次尝试获取范围内的车辆信息
+        for (int i = 0; i < 6; i++) {
+            Boolean flag = dispatchOrder(info);
+            if(flag) {
+                break;
+            }
+            if(i == 5) {
+
+            }else{
+                try{
+                    Thread.sleep(2000);
+                }catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return ResponseResult.success("");
     }
 
@@ -150,7 +168,8 @@ public class OrderService {
      *
      * @param orderInfo
      */
-    public ResponseResult<Boolean> dispatchOrder(OrderInfo orderInfo) {
+    public Boolean dispatchOrder(OrderInfo orderInfo) {
+        Boolean flag = false;
         // 循环判断范围内是否有对应的车辆
         // 拼接经纬度
         String depLongitude = orderInfo.getDepLongitude(); // 经度
@@ -239,21 +258,21 @@ public class OrderService {
                     pushFeignClient.push(pushRequest);
 
                     // 调用服务通知乘客
-                    JSONObject passengerContent = new  JSONObject();
-                    passengerContent.put("orderId",orderInfo.getId());
-                    passengerContent.put("driverId",orderInfo.getDriverId());
-                    passengerContent.put("driverPhone",orderInfo.getDriverPhone());
-                    passengerContent.put("vehicleNo",orderInfo.getVehicleNo());
+                    JSONObject passengerContent = new JSONObject();
+                    passengerContent.put("orderId", orderInfo.getId());
+                    passengerContent.put("driverId", orderInfo.getDriverId());
+                    passengerContent.put("driverPhone", orderInfo.getDriverPhone());
+                    passengerContent.put("vehicleNo", orderInfo.getVehicleNo());
                     // 车辆信息，调用车辆服务
                     ResponseResult<Car> carById = driverUserFeignClient.getCarInfo(carId);
                     Car carRemote = carById.getData();
 
                     passengerContent.put("brand", carRemote.getBrand());
-                    passengerContent.put("model",carRemote.getModel());
-                    passengerContent.put("vehicleColor",carRemote.getVehicleColor());
+                    passengerContent.put("model", carRemote.getModel());
+                    passengerContent.put("vehicleColor", carRemote.getVehicleColor());
 
-                    passengerContent.put("receiveOrderCarLongitude",orderInfo.getReceiveOrderCarLongitude());
-                    passengerContent.put("receiveOrderCarLatitude",orderInfo.getReceiveOrderCarLatitude());
+                    passengerContent.put("receiveOrderCarLongitude", orderInfo.getReceiveOrderCarLongitude());
+                    passengerContent.put("receiveOrderCarLatitude", orderInfo.getReceiveOrderCarLatitude());
 
                     PushRequest pushRequest1 = new PushRequest();
                     pushRequest1.setUserId(orderInfo.getPassengerId());
@@ -261,7 +280,7 @@ public class OrderService {
                     pushRequest1.setContent(passengerContent.toString());
 
                     pushFeignClient.push(pushRequest1);
-
+                    flag = true;
                     rLock.unlock();
 
                     break radius;
@@ -271,6 +290,6 @@ public class OrderService {
             }
 
         }
-        return ResponseResult.success(true);
+        return flag;
     }
 }
