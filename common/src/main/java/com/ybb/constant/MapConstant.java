@@ -23,6 +23,9 @@ public class MapConstant {
      */
     public static final String TERMINAL_ADD = "https://tsapi.amap.com/v1/track/terminal/add";
 
+    // 终端列表
+    public static final String TERMINAL_LIST = "https://tsapi.amap.com/v1/track/terminal/list";
+
     /**
      * 创建轨迹
      */

@@ -1,12 +1,14 @@
 package com.ybb.controller;
 
 import com.ybb.dto.ResponseResult;
+import com.ybb.response.TerminalListResponse;
 import com.ybb.response.TerminalResponse;
 import com.ybb.response.TrsearchResponse;
 import com.ybb.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,8 +28,13 @@ public class TerminalController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseResult<TerminalResponse> add(String name, String desc) {
+    public ResponseResult<TerminalResponse> add(@RequestParam String name, @RequestParam String desc) {
         return terminalService.add(name, desc);
+    }
+
+    @PostMapping("/list")
+    public ResponseResult<List<TerminalListResponse>> list(){
+        return terminalService.list();
     }
 
     /**

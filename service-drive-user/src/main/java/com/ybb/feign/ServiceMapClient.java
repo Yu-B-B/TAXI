@@ -4,6 +4,7 @@ import com.ybb.dto.ResponseResult;
 import com.ybb.response.TerminalResponse;
 import com.ybb.response.TrackResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,11 +19,12 @@ public interface ServiceMapClient {
      * @param desc
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/terminal/add")
-    public ResponseResult<TerminalResponse> addTerminal(@RequestParam String name , @RequestParam String desc);
+    @PostMapping("/terminal/add")
+    ResponseResult<TerminalResponse> addTerminal(@RequestParam String name, @RequestParam String desc);
 
     /**
      * 创建轨迹
+     *
      * @param tid
      * @return
      */

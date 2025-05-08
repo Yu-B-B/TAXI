@@ -2,6 +2,7 @@ package com.ybb.service;
 
 import com.ybb.dto.ResponseResult;
 import com.ybb.remote.TerminalClient;
+import com.ybb.response.TerminalListResponse;
 import com.ybb.response.TerminalResponse;
 import com.ybb.response.TrsearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +49,7 @@ public class TerminalService {
         return terminalClient.trsearch(tid,starttime,endtime);
     }
 
+    public ResponseResult<List<TerminalListResponse>> list() {
+        return terminalClient.list();
+    }
 }
