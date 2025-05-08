@@ -22,6 +22,6 @@ public interface DriverUserFeignClient {
     @GetMapping("/get-available-driver/{carId}")
     ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId);
 
-    @GetMapping("/getCarInfo")
+    @GetMapping("/service/car/getCarInfo")
     ResponseResult<Car> getCarInfo(@RequestParam Long carId);
 }

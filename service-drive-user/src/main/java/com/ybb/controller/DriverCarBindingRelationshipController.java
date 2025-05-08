@@ -21,7 +21,6 @@ public class DriverCarBindingRelationshipController {
 
     @PostMapping("/bind")
     public ResponseResult bind(@RequestBody DriverCarBindingRelationship driverCarBindingRelationship){
-
         return driverCarBindingRelationshipService.bind(driverCarBindingRelationship);
     }
 

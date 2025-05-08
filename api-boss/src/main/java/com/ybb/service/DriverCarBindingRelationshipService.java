@@ -13,6 +13,11 @@ public class DriverCarBindingRelationshipService {
     private DriverServiceFeign driverServiceFeign;
 
 
+    /**
+     * 【司机】与【车辆】绑定
+     * @param driverCarBindingRelationship
+     * @return
+     */
     public ResponseResult bind(DriverCarBindingRelationship driverCarBindingRelationship){
         return driverServiceFeign.bind(driverCarBindingRelationship);
     }

@@ -18,15 +18,15 @@ public interface DriverUserFeignClient {
      * @param carId 车辆id
      * @return
      */
-    @GetMapping("/getCarInfo")
-    public ResponseResult<Car> getCarById(@RequestParam Long carId);
+    @GetMapping("/service/car/getCarInfo")
+    ResponseResult<Car> getCarById(@RequestParam Long carId);
 
     @PostMapping("/driver-user-work-status")
-    public ResponseResult changeWorkStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus);
+    ResponseResult changeWorkStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus);
 
     @GetMapping("/driver-car-binding-relationship")
-    public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationShip(@RequestParam String driverPhone);
+    ResponseResult<DriverCarBindingRelationship> getDriverCarRelationShip(@RequestParam String driverPhone);
 
     @GetMapping("/work-status")
-    public ResponseResult<DriverUserWorkStatus> getWorkStatus(@RequestParam Long driverId);
+    ResponseResult<DriverUserWorkStatus> getWorkStatus(@RequestParam Long driverId);
 }

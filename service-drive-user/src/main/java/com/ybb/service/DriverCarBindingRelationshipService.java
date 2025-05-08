@@ -1,5 +1,6 @@
 package com.ybb.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ybb.constant.CommonStateEnum;
 import com.ybb.constant.DriverCarConstants;
@@ -26,10 +27,10 @@ public class DriverCarBindingRelationshipService {
 
     public ResponseResult bind(DriverCarBindingRelationship driverCarBindingRelationship){
         // 判断，如果参数中的车辆和司机，已经做过绑定，则不允许再次绑定
-        QueryWrapper<DriverCarBindingRelationship> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("driver_id",driverCarBindingRelationship.getDriverId());
-        queryWrapper.eq("car_id",driverCarBindingRelationship.getCarId());
-        queryWrapper.eq("bind_state", DriverCarConstants.DRIVER_CAR_BIND);
+        LambdaQueryWrapper<DriverCarBindingRelationship> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DriverCarBindingRelationship::getDriverId,driverCarBindingRelationship.getDriverId());
+        queryWrapper.eq(DriverCarBindingRelationship::getCarId,driverCarBindingRelationship.getCarId());
+        queryWrapper.eq(DriverCarBindingRelationship::getBindState, DriverCarConstants.DRIVER_CAR_BIND);
 
         Integer integer = driverCarBindingRelationshipMapper.selectCount(queryWrapper);
         if ((integer.intValue() > 0)){
@@ -38,9 +39,9 @@ public class DriverCarBindingRelationshipService {
         }
 
         // 司机被绑定了
-        queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("driver_id",driverCarBindingRelationship.getDriverId());
-        queryWrapper.eq("bind_state",DriverCarConstants.DRIVER_CAR_BIND);
+        queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DriverCarBindingRelationship::getDriverId,driverCarBindingRelationship.getDriverId());
+        queryWrapper.eq(DriverCarBindingRelationship::getBindState,DriverCarConstants.DRIVER_CAR_BIND);
         integer = driverCarBindingRelationshipMapper.selectCount(queryWrapper);
         if ((integer.intValue() > 0)){
             // 司机已被绑定
@@ -48,9 +49,9 @@ public class DriverCarBindingRelationshipService {
         }
 
         // 车辆被绑定了
-        queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("car_id",driverCarBindingRelationship.getCarId());
-        queryWrapper.eq("bind_state",DriverCarConstants.DRIVER_CAR_BIND);
+        queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DriverCarBindingRelationship::getCarId,driverCarBindingRelationship.getCarId());
+        queryWrapper.eq(DriverCarBindingRelationship::getBindState,DriverCarConstants.DRIVER_CAR_BIND);
         integer = driverCarBindingRelationshipMapper.selectCount(queryWrapper);
         if ((integer.intValue() > 0)){
             // 车辆已被绑定

@@ -27,6 +27,11 @@ public class DriverCarBindingRelationshipController {
         return driverCarBindingRelationshipService.bind(driverCarBindingRelationship);
     }
 
+    /**
+     * 司机车辆解绑
+     * @param driverCarBindingRelationship
+     * @return
+     */
     @PostMapping("/unbind")
     public ResponseResult unbind(@RequestBody DriverCarBindingRelationship driverCarBindingRelationship){
         return driverCarBindingRelationshipService.unbind(driverCarBindingRelationship);

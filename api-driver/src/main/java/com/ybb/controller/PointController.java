@@ -16,9 +16,13 @@ public class PointController {
     @Autowired
     private PointService pointService;
 
+    /**
+     * 更新司机位置
+     * @param apiDriverPointRequest
+     * @return
+     */
     @PostMapping("/upload")
     public ResponseResult upload(@RequestBody ApiDriverPointRequest apiDriverPointRequest) {
-
         return pointService.upload(apiDriverPointRequest);
     }
 }
