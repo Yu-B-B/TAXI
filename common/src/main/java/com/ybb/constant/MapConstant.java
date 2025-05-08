@@ -12,6 +12,12 @@ public class MapConstant {
      */
     public static final String SERVICE_ADD_URL = "https://tsapi.amap.com/v1/track/service/add";
 
+    // 服务查询
+    public static final String SERVICE_GET_URL = "https://tsapi.amap.com/v1/track/service/list";
+
+    // 服务删除
+    public static final String SERVICE_DELETE_URL = "https://tsapi.amap.com/v1/track/service/delete";
+
     /**
      * 创建终端
      */

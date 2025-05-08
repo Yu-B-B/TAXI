@@ -20,35 +20,38 @@ public class TerminalController {
 
     /**
      * 添加终端
+     *
      * @param name
      * @param desc
      * @return
      */
     @PostMapping("/add")
-    public ResponseResult<TerminalResponse> add(String name , String desc){
-        return terminalService.add(name , desc);
+    public ResponseResult<TerminalResponse> add(String name, String desc) {
+        return terminalService.add(name, desc);
     }
 
     /**
      * 终端搜索
+     *
      * @param center
      * @param radius
      * @return
      */
     @PostMapping("/aroundsearch")
-    public ResponseResult<List<TerminalResponse>> aroundsearch(String center, Integer radius){
-        return terminalService.aroundsearch(center,radius);
+    public ResponseResult<List<TerminalResponse>> aroundsearch(String center, Integer radius) {
+        return terminalService.aroundsearch(center, radius);
     }
 
     /**
      * 轨迹查询
+     *
      * @param tid
      * @param starttime 开始时间 - 毫秒
-     * @param endtime 结束时间 - 毫秒
+     * @param endtime   结束时间 - 毫秒
      * @return
      */
     @PostMapping("/trsearch")
-    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime , Long endtime){
-        return terminalService.trsearch(tid,starttime,endtime);
+    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime, Long endtime) {
+        return terminalService.trsearch(tid, starttime, endtime);
     }
 }

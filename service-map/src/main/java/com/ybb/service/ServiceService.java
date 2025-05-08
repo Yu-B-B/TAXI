@@ -10,7 +10,15 @@ public class ServiceService {
     @Autowired
     private ServiceClient serviceClient;
 
-    public ResponseResult add(String name){
+    public ResponseResult add(String name) {
         return serviceClient.createServer(name);
+    }
+
+    public ResponseResult delete(String sid) {
+        return serviceClient.delete(sid);
+    }
+
+    public ResponseResult get() {
+        return serviceClient.get();
     }
 }
