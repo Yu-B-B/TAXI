@@ -16,10 +16,10 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class TrackClient {
 
-    @Value("${amap.key}")
+    @Value("${amap.app.key}")
     private String amapKey;
 
-    @Value("${amap.sid}")
+    @Value("${amap.app.sid}")
     private String amapSid;
 
     @Autowired

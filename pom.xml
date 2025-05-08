@@ -14,7 +14,6 @@
   <modules>
     <module>passenger</module>
       <module>verification</module>
-      <module>common</module>
       <module>passenger-public</module>
       <module>service-price</module>
       <module>service-map</module>

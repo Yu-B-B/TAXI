@@ -11,6 +11,10 @@ public class DicDirectionController {
     @Autowired
     private DicDirectionService dicDirectionService;
 
+    /**
+     * 获取高德地图中的地区列表信息
+     * @return
+     */
     @GetMapping("/get-resolve-direction-dic")
     public ResponseResult getResolveDirectionDic() {
         return dicDirectionService.getResolveDirectionDic();
