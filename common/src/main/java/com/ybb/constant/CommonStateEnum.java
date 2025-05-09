@@ -7,6 +7,7 @@ public enum CommonStateEnum {
 
     CALL_USER_ADD_ERROR(1000,"调用新增用户异常"),
 
+    CHECK_CODE_ERROR(1001,"手机号或手机验证码异常"),
     /**
      * 司机和车辆：1500-1599
      */

@@ -14,6 +14,9 @@ import com.ybb.util.RedisPrefixUtils;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -82,35 +85,64 @@ public class VerificationCodeService {
         try {
             passengerPublicFeign.loginOrRegister(codeDto);
         } catch (Exception e) {
-            return ResponseResult.fail(CommonStateEnum.CALL_USER_ADD_ERROR.getCode(),CommonStateEnum.CALL_USER_ADD_ERROR.getMessage());
+            return ResponseResult.fail(CommonStateEnum.CALL_USER_ADD_ERROR.getCode(), CommonStateEnum.CALL_USER_ADD_ERROR.getMessage());
         }
+
 
         // 颁发令牌，identity因该为枚举值/常量
         String accessToken = JwtUtils.generateToken(phone, IdentifyConstant.PASSENGER, TokenConstant.ACCESS_TOKEN);
         // 增加双token，做自动续登录功能
         String refreshToken = JwtUtils.generateToken(phone, IdentifyConstant.PASSENGER, TokenConstant.FRESH_TOKEN);
+        // 开启redis事务支持
+        stringRedisTemplate.setEnableTransactionSupport(true);
+        SessionCallback<Boolean> callback = new SessionCallback<Boolean>() {
 
-        // v1 - 将token存入redis中
-//        String accessTokenKey = RedisPrefixUtils.generateTokenKey(phone, IdentifyConstant.PASSENGER);
+            @Override
+            public <K, V> Boolean execute(RedisOperations<K, V> operations) throws DataAccessException {
+                // 事务结束
+                stringRedisTemplate.multi();
 
-        // v2 - 增加token类型
-        String accessTokenKey = RedisPrefixUtils.generateTokenKeyV2(phone, IdentifyConstant.PASSENGER, TokenConstant.ACCESS_TOKEN);
-        // refreshToken比accessToken晚过期，让refreshToken有能力重新生成 accessToken与refreshToken信息
-        String refreshTokenKey = RedisPrefixUtils.generateTokenKeyV2(phone, IdentifyConstant.PASSENGER, TokenConstant.FRESH_TOKEN);
+                try {
 
-        stringRedisTemplate.opsForValue().set(accessTokenKey, accessToken, 30, TimeUnit.DAYS);
-        stringRedisTemplate.opsForValue().set(refreshTokenKey, accessToken, 31, TimeUnit.DAYS);
+
+                    // v1 - 将token存入redis中
+                    // String accessTokenKey = RedisPrefixUtils.generateTokenKey(phone, IdentifyConstant.PASSENGER);
+
+                    // v2 - 增加token类型
+                    String accessTokenKey = RedisPrefixUtils.generateTokenKeyV2(phone, IdentifyConstant.PASSENGER, TokenConstant.ACCESS_TOKEN);
+                    // refreshToken比accessToken晚过期，让refreshToken有能力重新生成 accessToken与refreshToken信息
+                    String refreshTokenKey = RedisPrefixUtils.generateTokenKeyV2(phone, IdentifyConstant.PASSENGER, TokenConstant.FRESH_TOKEN);
+
+                    stringRedisTemplate.opsForValue().set(accessTokenKey, accessToken, 30, TimeUnit.DAYS);
+//                    int i  = 10/0;
+                    stringRedisTemplate.opsForValue().set(refreshTokenKey, accessToken, 31, TimeUnit.DAYS);
+
+                    operations.exec();
+
+                    return true;
+                } catch (Exception e) {
+                    operations.discard();
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        Boolean execute = stringRedisTemplate.execute(callback);
+        if (execute) {
+            // 保存双token
+            TokenResponse response = new TokenResponse();
+            response.setAccessToken(accessToken);
+            response.setRefreshToken(refreshToken);
+
+            return ResponseResult.success(response);
+        }else{
+            return ResponseResult.fail(CommonStateEnum.CHECK_CODE_ERROR.getCode(),CommonStateEnum.CHECK_CODE_ERROR.getMessage());
+        }
 
         // 做测试
 //        stringRedisTemplate.opsForValue().set(accessTokenKey, accessToken, 15, TimeUnit.SECONDS);
 //        stringRedisTemplate.opsForValue().set(refreshTokenKey, accessToken, 30, TimeUnit.SECONDS);
 
-        // 保存双token
-        TokenResponse response = new TokenResponse();
-        response.setAccessToken(accessToken);
-        response.setRefreshToken(refreshToken);
 
-        return new ResponseResult().success(response);
     }
 
 
