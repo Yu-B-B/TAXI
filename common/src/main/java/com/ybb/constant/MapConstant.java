@@ -25,6 +25,8 @@ public class MapConstant {
 
     // 终端列表
     public static final String TERMINAL_LIST = "https://tsapi.amap.com/v1/track/terminal/list";
+    // 终端删除
+    public static final String TERMINAL_DELETE = "https://tsapi.amap.com/v1/track/terminal/delete";
 
     /**
      * 创建轨迹

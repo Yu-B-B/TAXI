@@ -37,19 +37,13 @@ public class TerminalService {
         return terminalClient.aroundsearch(center,radius);
     }
 
-    /**
-     * 轨迹查询
-     * @param tid
-     * @param starttime
-     * @param endtime
-     * @return
-     */
-    public ResponseResult<TrsearchResponse> trsearch(String tid , Long starttime , Long endtime){
 
-        return terminalClient.trsearch(tid,starttime,endtime);
-    }
 
     public ResponseResult<List<TerminalListResponse>> list() {
         return terminalClient.list();
+    }
+
+    public ResponseResult delete(String tid) {
+        return terminalClient.delete(tid);
     }
 }

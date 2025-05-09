@@ -125,56 +125,7 @@ public class TerminalClient {
         return ResponseResult.success(terminalResponseList);
     }
 
-    /**
-     * 轨迹查询
-     *
-     * @param tid
-     * @param starttime
-     * @param endtime
-     * @return
-     */
-    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime, Long endtime) {
-        Map<String, String> content = getDicContent();
 
-        // 拼装请求的url
-        StringBuilder url = new StringBuilder();
-        url.append(MapConstant.TERMINAL_TRSEARCH);
-        url.append("?key=" + content.get("appKey"));
-        url.append("&sid=" + content.get("appSid"));
-        url.append("&tid=" + tid);
-        url.append("&starttime=" + starttime);
-        url.append("&endtime=" + endtime);
-
-        System.out.println("高德地图查询轨迹结果请求：" + url.toString());
-        ResponseEntity<String> forEntity = restTemplate.getForEntity(url.toString(), String.class);
-        System.out.println("高德地图查询轨迹结果响应：" + forEntity.getBody());
-
-        // 解析返回结果
-        JSONObject result = JSONObject.fromObject(forEntity.getBody());
-        JSONObject data = result.getJSONObject("data");
-        int counts = data.getInt("counts");
-        if (counts == 0) {
-            return null;
-        }
-        JSONArray tracks = data.getJSONArray("tracks");
-        long driveMile = 0L;
-        long driveTime = 0L;
-        for (int i = 0; i < tracks.size(); i++) {
-            JSONObject jsonObject = tracks.getJSONObject(i);
-
-            long distance = jsonObject.getLong("distance");
-            driveMile = driveMile + distance;
-
-            long time = jsonObject.getLong("time");
-            time = time / (1000 * 60);
-            driveTime = driveTime + time;
-        }
-        TrsearchResponse trsearchResponse = new TrsearchResponse();
-        trsearchResponse.setDriveMile(driveMile);
-        trsearchResponse.setDriveTime(driveTime);
-        return ResponseResult.success(trsearchResponse);
-
-    }
 
     public ResponseResult<List<TerminalListResponse>> list() {
         Map<String, String> content = getDicContent();
@@ -202,6 +153,18 @@ public class TerminalClient {
         return ResponseResult.success(result);
     }
 
+    public ResponseResult delete(String tid) {
+        Map<String, String> content = getDicContent();
+        StringBuilder url = new StringBuilder();
+        url.append(MapConstant.TERMINAL_DELETE);
+        url.append("?key=" + content.get("appKey"));
+        url.append("&sid=" + content.get("appSid"));
+        url.append("&tid=" + tid);
+
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(url.toString(), String.class);
+        return null;
+    }
+
     public Map<String, String> getDicContent() {
         List<DicContent> dicContents = dicContentMapper.selectList(null);
         Map<String, String> result = new HashMap<>();
@@ -210,6 +173,7 @@ public class TerminalClient {
         });
         return result;
     }
+
 
 
 }

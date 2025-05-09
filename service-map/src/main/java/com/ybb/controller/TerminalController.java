@@ -37,6 +37,11 @@ public class TerminalController {
         return terminalService.list();
     }
 
+    @PostMapping("/delete")
+    public ResponseResult delete(@RequestParam String tid) {
+        return terminalService.delete(tid);
+    }
+
     /**
      * 终端搜索
      *
@@ -49,16 +54,5 @@ public class TerminalController {
         return terminalService.aroundsearch(center, radius);
     }
 
-    /**
-     * 轨迹查询
-     *
-     * @param tid
-     * @param starttime 开始时间 - 毫秒
-     * @param endtime   结束时间 - 毫秒
-     * @return
-     */
-    @PostMapping("/trsearch")
-    public ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime, Long endtime) {
-        return terminalService.trsearch(tid, starttime, endtime);
-    }
+
 }
