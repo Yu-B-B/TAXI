@@ -1,73 +1,73 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.4.12</version>
-  </parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.12</version>
+    </parent>
 
-  <groupId>com.ybb</groupId>
-  <artifactId>taxi-public</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>passenger</module>
-      <module>verification</module>
-      <module>passenger-public</module>
-      <module>service-price</module>
-      <module>service-map</module>
-      <module>service-drive-user</module>
-      <module>api-boss</module>
-    <module>api-driver</module>
-      <module>service-order</module>
-      <module>service-see-push</module>
-  </modules>
-  <version>1.0-SNAPSHOT</version>
+    <groupId>com.ybb</groupId>
+    <artifactId>taxi-public</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>api-passenger</module>
+        <module>verification</module>
+        <module>passenger-public</module>
+        <module>service-price</module>
+        <module>service-map</module>
+        <module>service-drive-user</module>
+        <module>api-boss</module>
+        <module>api-driver</module>
+        <module>service-order</module>
+        <module>service-see-push</module>
+    </modules>
+    <version>1.0-SNAPSHOT</version>
 
-  <properties>
-    <maven.cpmpiler.source>8</maven.cpmpiler.source>
-    <maven.cpmpiler.target>8</maven.cpmpiler.target>
-  </properties>
+    <properties>
+        <maven.cpmpiler.source>8</maven.cpmpiler.source>
+        <maven.cpmpiler.target>8</maven.cpmpiler.target>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sf.json-lib</groupId>
-      <artifactId>json-lib</artifactId>
-      <version>2.4</version>
-      <classifier>jdk15</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>com.ybb</groupId>
-      <artifactId>common</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
-
-  <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.alibaba.cloud</groupId>
-        <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-        <version>2021.1</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>2020.0.1</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.4</version>
+            <classifier>jdk15</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ybb</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-  </dependencyManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2021.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2020.0.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

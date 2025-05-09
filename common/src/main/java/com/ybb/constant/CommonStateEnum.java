@@ -4,6 +4,9 @@ public enum CommonStateEnum {
     VERIFICATION_CODE_ERROR(2131,"验证码校验失败"),
     TOKEN_ERROR(1199, "token无效或已过期"),
 
+
+    CALL_USER_ADD_ERROR(1000,"调用新增用户异常"),
+
     /**
      * 司机和车辆：1500-1599
      */
