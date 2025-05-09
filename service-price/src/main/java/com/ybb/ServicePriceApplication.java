@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan("com.ybb.mapper")
+@MapperScan("com.ybb.serviceMap.mapper")
 public class ServicePriceApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServicePriceApplication.class, args);

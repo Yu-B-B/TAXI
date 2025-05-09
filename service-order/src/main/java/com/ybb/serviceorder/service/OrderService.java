@@ -47,8 +47,8 @@ public class OrderService {
     private DriverUserFeignClient driverUserFeignClient;
     @Autowired
     private MapFeignClient mapFeignClient;
-    @Autowired
-    private RedissonClient redissonClient;
+    //    @Autowired
+//    private RedissonClient redissonClient;
     @Autowired
     private PushFeignClient pushFeignClient;
 
@@ -317,8 +317,8 @@ public class OrderService {
                     Long driverId = driverInfo.getDriverId();
 
                     String lockKey = (driverId + "").intern();
-                    RLock rLock = redissonClient.getLock(lockKey);
-                    rLock.lock();
+//                    RLock rLock = redissonClient.getLock(lockKey);
+//                    rLock.lock();
 
                     // 获取到司机信息后，若司机处于（接单、接乘客、到达乘客目的地、乘客上车）状态下，不允许接单
                     LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
@@ -332,7 +332,7 @@ public class OrderService {
                     Integer availableDriver = orderMapper.selectCount(wrapper);
                     // 司机处于不可接单的状态下，跳过当前循环
                     if (availableDriver > 0) {
-                        rLock.unlock();
+//                        rLock.unlock();
                         continue;
                     }
                     // 司机可接单，订单与司机关联
@@ -392,7 +392,7 @@ public class OrderService {
 
                     pushFeignClient.push(pushRequest1);
                     flag = true;
-                    rLock.unlock();
+//                    rLock.unlock();
 
                     break radius;
 
@@ -428,6 +428,15 @@ public class OrderService {
             Integer radius = list.get(i);
             aroundsearched = mapFeignClient.aroundsearch(center, radius);
 
+            // mock test data
+            TerminalResponse response = new TerminalResponse();
+            response.setCarId(1920757740143071234L);
+            response.setTid("1284873121");
+            response.setLatitude("39.908326");
+            response.setLongitude("116.454071");
+            List<TerminalResponse> objects = new ArrayList<>();
+            objects.add(response);
+
             // 解析数据
             List<TerminalResponse> data = aroundsearched.getData();
             for (int j = 0; j < data.size(); j++) {
@@ -440,6 +449,7 @@ public class OrderService {
                 // 根据【车辆id】获取对应司机信息，获取可以进行派单的司机信息
                 ResponseResult<OrderDriverResponse> result = driverUserFeignClient.getAvailableDriver(carId);
                 if (result.getCode() == CommonStateEnum.AVAILABLE_DRIVER_EMPTY.getCode()) {
+                    System.out.println("没有关于车辆ID为：" + carId + "的司机");
                     continue;
                 } else {
                     // 解析司机ID
@@ -465,7 +475,7 @@ public class OrderService {
                     pushRequest.setUserId(driverId);
                     pushRequest.setIdentity(IdentifyConstant.DRIVER);
                     pushFeignClient.push(pushRequest);
-
+                    flag = true;
 
                     break radius;
 
@@ -531,7 +541,7 @@ public class OrderService {
      * @param orderRequest
      * @return
      */
-    public ResponseResult pickUpPassenger(@RequestBody OrderRequest orderRequest) {
+    public ResponseResult pickUpPassenger(OrderRequest orderRequest) {
         Long orderId = orderRequest.getOrderId();
 
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
@@ -553,7 +563,7 @@ public class OrderService {
      * @param orderRequest
      * @return
      */
-    public ResponseResult passengerGetoff(@RequestBody OrderRequest orderRequest) {
+    public ResponseResult passengerGetoff(OrderRequest orderRequest) {
         Long orderId = orderRequest.getOrderId();
 
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();

@@ -19,16 +19,17 @@ public interface MapFeignClient {
      * @param radius
      * @return
      */
-    @PostMapping("/aroundsearch")
-    ResponseResult<List<TerminalResponse>> aroundsearch(@RequestParam String center ,@RequestParam Integer radius);
+    @PostMapping("/terminal/aroundsearch")
+    ResponseResult<List<TerminalResponse>> aroundsearch(@RequestParam String center, @RequestParam Integer radius);
 
     /**
      * 轨迹查询
+     *
      * @param tid
      * @param starttime
      * @param endtime
      * @return
      */
-    @PostMapping("/trsearch")
-    ResponseResult<TrsearchResponse> trsearch(String tid, Long starttime , Long endtime);
+    @PostMapping("/track/trsearch")
+    ResponseResult<TrsearchResponse> trsearch(@RequestParam String tid, @RequestParam Long starttime, @RequestParam Long endtime);
 }

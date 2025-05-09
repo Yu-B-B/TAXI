@@ -6,12 +6,12 @@ import org.redisson.config.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-@Component
-public class RedisConfig {
-    @Bean
-    public RedissonClient redisson() {
-        Config config = new Config();
-
-        return Redisson.create(config);
-    }
-}
+//@Component
+//public class RedisConfig {
+//    @Bean
+//    public RedissonClient redisson() {
+//        Config config = new Config();
+//
+//        return Redisson.create(config);
+//    }
+//}

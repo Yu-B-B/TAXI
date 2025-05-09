@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan("com.ybb.mapper")
+@MapperScan("com.ybb.serviceorder.mapper")
 public class OrderServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(OrderServerApplication.class, args);

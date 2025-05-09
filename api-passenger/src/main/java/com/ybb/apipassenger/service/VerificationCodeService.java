@@ -50,12 +50,8 @@ public class VerificationCodeService {
         System.out.println("存入redis：1212");
 
 
-        // 返回
-        JSONObject result = new JSONObject();
-        result.put("code", 1);
-        result.put("message", "success");
 
-        return ResponseResult.success();
+        return ResponseResult.success(code);
     }
 
     /**

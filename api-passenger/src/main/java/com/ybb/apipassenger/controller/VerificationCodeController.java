@@ -6,12 +6,14 @@ import com.ybb.apipassenger.service.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 乘客登录时 【获取验证码】 与 【验证码校验】
  */
 @RestController
+@RequestMapping("/api/passenger")
 public class VerificationCodeController {
     @Autowired
     private VerificationCodeService verificationCodeService;
