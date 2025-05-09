@@ -1,9 +1,9 @@
-package com.ybb.apipassenger.controller;
+package com.ybb.serviceorder.controller;
 
 import com.ybb.dto.OrderInfo;
 import com.ybb.dto.ResponseResult;
 import com.ybb.request.OrderRequest;
-import com.ybb.apipassenger.service.OrderService;
+import com.ybb.serviceorder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

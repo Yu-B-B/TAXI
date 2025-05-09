@@ -1,4 +1,4 @@
-package com.ybb.config;
+package com.ybb.serviceorder.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

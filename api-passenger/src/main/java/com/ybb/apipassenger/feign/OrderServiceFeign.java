@@ -8,5 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient("service-order")
 public interface OrderServiceFeign {
     @PostMapping("/createOrder")
-    public ResponseResult createOrder(OrderRequest orderRequest);
+    ResponseResult createOrder(OrderRequest orderRequest);
+
+    @PostMapping("/bookingOrder")
+    ResponseResult bookingOrder(OrderRequest orderRequest);
 }

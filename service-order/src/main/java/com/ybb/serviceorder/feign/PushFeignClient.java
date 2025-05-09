@@ -1,4 +1,4 @@
-package com.ybb.apipassenger.feign;
+package com.ybb.serviceorder.feign;
 
 import com.ybb.request.PushRequest;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -1,4 +1,4 @@
-package com.ybb.mapper;
+package com.ybb.serviceorder.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ybb.dto.OrderInfo;

@@ -21,6 +21,11 @@ public class OrderService {
         return orderServiceFeign.createOrder(orderRequest);
     }
 
+    public ResponseResult bookingOrder(OrderRequest orderRequest) {
+        // 调用订单服务创建订单
+        return orderServiceFeign.bookingOrder(orderRequest);
+    }
+
     /**
      * 取消订单
      * @param orderRequest

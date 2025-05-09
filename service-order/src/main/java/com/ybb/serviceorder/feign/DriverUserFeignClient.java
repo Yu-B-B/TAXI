@@ -1,4 +1,4 @@
-package com.ybb.apipassenger.feign;
+package com.ybb.serviceorder.feign;
 
 import com.ybb.dto.Car;
 import com.ybb.dto.ResponseResult;
