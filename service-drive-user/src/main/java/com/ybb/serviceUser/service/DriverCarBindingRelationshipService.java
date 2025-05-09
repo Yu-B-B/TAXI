@@ -6,7 +6,9 @@ import com.ybb.constant.CommonStateEnum;
 import com.ybb.constant.DriverCarConstants;
 import com.ybb.dto.DriverCarBindingRelationship;
 import com.ybb.dto.DriverUser;
+import com.ybb.dto.DriverUserWorkStatus;
 import com.ybb.dto.ResponseResult;
+import com.ybb.response.OrderDriverResponse;
 import com.ybb.serviceUser.mapper.DriverCarBindingRelationshipMapper;
 import com.ybb.serviceUser.mapper.DriverUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +92,11 @@ public class DriverCarBindingRelationshipService {
 
     }
 
+    /**
+     * 根据司机手机号查询车辆与司机的绑定关系
+     * @param driverPhone 司机手机号
+     * @return
+     */
     public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationShipByDriverPhone(@RequestParam String driverPhone){
         QueryWrapper<DriverUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("driver_phone",driverPhone);

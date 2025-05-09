@@ -8,6 +8,10 @@ public enum CommonStateEnum {
     CALL_USER_ADD_ERROR(1000,"调用新增用户异常"),
 
     CHECK_CODE_ERROR(1001,"手机号或手机验证码异常"),
+    CAR_NOT_EXISTS(1507,"车辆不存在"),
+
+    DRIVER_STATUS_UPDATE_ERROR(1508,"司机工作状态修改失败"),
+
     /**
      * 司机和车辆：1500-1599
      */
@@ -39,6 +43,14 @@ public enum CommonStateEnum {
     CITY_SERVICE_NOT_SERVICE(1602,"当前城市不提供叫车服务"),
 
     ORDER_CANCEL_ERROR(1603, "订单取消失败"),
+
+    ORDER_NOT_EXISTS(1604,"订单不存在"),
+
+    ORDER_CAN_NOT_GRAB(1605 , "订单不能被抢"),
+
+    ORDER_GRABING(1606,"订单正在被抢"),
+
+    ORDER_UPDATE_ERROR(1607,"订单修改失败"),
 
     /**
     * 计价规则

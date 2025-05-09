@@ -1,6 +1,7 @@
 package com.ybb.apiDriver.feign;
 
 import com.ybb.dto.ResponseResult;
+import com.ybb.request.DriverGrabRequest;
 import com.ybb.request.OrderRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +9,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient("service-order")
 public interface ServerOrderFeignClient {
+
+    /**
+     * 抢单业务
+     * @param request
+     * @return
+     */
+    @PostMapping("/order/grab")
+    ResponseResult orderGrab(@RequestBody DriverGrabRequest request);
+
+
     /**
      * 去接乘客
      *

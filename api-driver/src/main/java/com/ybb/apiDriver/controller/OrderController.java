@@ -23,12 +23,18 @@ public class OrderController {
     private PayService payService;
 
     // 司机抢单
-    @PostMapping("/grap")
-    public ResponseResult grap(@RequestBody OrderRequest orderRequest, HttpServletRequest header) {
+    @PostMapping("/grab")
+    public ResponseResult grab(@RequestBody OrderRequest orderRequest, HttpServletRequest header) {
         String authorization = header.getHeader("Authorization");
         TokenResult token = JwtUtils.resolveToken(authorization);
         String identity = token.getIdentity();
         String driverPhone = token.getPhone();
+        String receiveOrderCarLongitude = orderRequest.getReceiveOrderCarLongitude();
+        String receiveOrderCarLatitude = orderRequest.getReceiveOrderCarLatitude();
+
+        // 执行抢单
+        orderService.grab(driverPhone,orderRequest.getOrderId(),receiveOrderCarLongitude,receiveOrderCarLatitude);
+
         return ResponseResult.success();
     }
 

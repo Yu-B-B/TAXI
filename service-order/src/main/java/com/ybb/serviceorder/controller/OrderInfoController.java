@@ -2,9 +2,11 @@ package com.ybb.serviceorder.controller;
 
 import com.ybb.dto.OrderInfo;
 import com.ybb.dto.ResponseResult;
+import com.ybb.request.DriverGrabRequest;
 import com.ybb.request.OrderRequest;
 import com.ybb.serviceorder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +44,25 @@ public class OrderInfoController {
         return orderService.bookingOrder(orderRequest);
     }
 
+    /**
+     * 订单详情
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/detail")
+    public ResponseResult<OrderInfo> detail(Long orderId){
+        return orderService.detail(orderId);
+    }
+
+    /**
+     * 抢单业务
+     * @param request
+     * @return
+     */
+    @PostMapping("/order/grab")
+    public ResponseResult orderGrab(@RequestBody DriverGrabRequest request) {
+        return orderService.orderGrab(request);
+    }
 
 
     /**

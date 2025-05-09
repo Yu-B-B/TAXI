@@ -45,4 +45,7 @@ public class DriverCarConstants {
      * 司机工作状态：暂停
      */
     public static int DRIVER_WORK_STATUS_SUSPEND = 2;
+
+    public static int DRIVER_WORK_STATUS_SERVING = 3;
+
 }
