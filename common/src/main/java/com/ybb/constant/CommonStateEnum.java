@@ -52,6 +52,10 @@ public enum CommonStateEnum {
     PRICE_RULE_CHANGED(1303,"计价规则有变化"),
 
     USER_NOT_EXISTS(1200,"用户不存在"),
+
+    VALIDATION_EXCEPTION(1700,"统一验证框架的错误提示"),
+
+
     SUCCESS(1,"succcess"),
     FAIL(0,"fail")
 
