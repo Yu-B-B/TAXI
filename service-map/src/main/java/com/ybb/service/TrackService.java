@@ -28,4 +28,14 @@ public class TrackService {
     public ResponseResult<TrsearchResponse> trsearch(String tid , Long starttime , Long endtime){
         return trackClient.trsearch(tid,starttime,endtime);
     }
+
+    /**
+     * 轨迹删除
+     * @param tid 设备唯一编号
+     * @param trid 轨迹id
+     * @return
+     */
+    public ResponseResult delete(String tid, String trid) {
+        return trackClient.delete(tid,trid);
+    }
 }

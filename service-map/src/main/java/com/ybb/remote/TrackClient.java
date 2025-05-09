@@ -78,8 +78,9 @@ public class TrackClient {
         url.append("?key=" + content.get("appKey"));
         url.append("&sid=" + content.get("appSid"));
         url.append("&tid=" + tid);
-        url.append("&starttime=" + starttime);
-        url.append("&endtime=" + endtime);
+        url.append("&trid=40");
+//        url.append("&starttime=" + starttime);
+//        url.append("&endtime=" + endtime);
 
         System.out.println("高德地图查询轨迹结果请求：" + url.toString());
         ResponseEntity<String> forEntity = restTemplate.getForEntity(url.toString(), String.class);
@@ -109,7 +110,25 @@ public class TrackClient {
         trsearchResponse.setDriveMile(driveMile);
         trsearchResponse.setDriveTime(driveTime);
         return ResponseResult.success(trsearchResponse);
+    }
 
+    public ResponseResult delete(String tid, String trid) {
+        Map<String, String> content = getDicContent();
+
+        // 拼装请求的url
+        StringBuilder url = new StringBuilder();
+        url.append(MapConstant.TRACK_DELETE);
+        url.append("?key=" + content.get("appKey"));
+        url.append("&sid=" + content.get("appSid"));
+        url.append("&tid=" + tid);
+        url.append("&trid=" + trid);
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(url.toString(), String.class);
+        System.out.println("高德地图查询轨迹结果响应：" + forEntity.getBody());
+
+        // 解析返回结果
+        JSONObject result = JSONObject.fromObject(forEntity.getBody());
+        JSONObject data = result.getJSONObject("data");
+        return null;
     }
 
     public Map<String, String> getDicContent() {
@@ -120,4 +139,6 @@ public class TrackClient {
         });
         return result;
     }
+
+
 }

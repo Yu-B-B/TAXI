@@ -29,6 +29,11 @@ public class TrackController {
         return trackService.add(tid);
     }
 
+    @PostMapping("/delete")
+    public ResponseResult delete(String tid,String trid){
+        return trackService.delete(tid,trid);
+    }
+
     /**
      * 轨迹查询
      *

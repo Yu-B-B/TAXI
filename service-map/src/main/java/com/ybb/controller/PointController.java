@@ -24,7 +24,6 @@ public class PointController {
      */
     @PostMapping("/upload")
     public ResponseResult upload(@RequestBody PointRequest pointRequest){
-
         return pointService.upload(pointRequest);
     }
 }

@@ -5,8 +5,6 @@ import com.ybb.response.TerminalResponse;
 import com.ybb.response.TrackResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient("service-map")
@@ -28,6 +26,6 @@ public interface ServiceMapClient {
      * @param tid
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/track/add")
-    public ResponseResult<TrackResponse> addTrack(@RequestParam String tid);
+    @PostMapping("/track/add")
+    ResponseResult<TrackResponse> addTrack(@RequestParam String tid);
 }

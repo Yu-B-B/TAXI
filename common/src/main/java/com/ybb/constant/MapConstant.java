@@ -32,6 +32,8 @@ public class MapConstant {
      * 创建轨迹
      */
     public static final String TRACK_ADD = "https://tsapi.amap.com/v1/track/trace/add";
+    // 轨迹删除
+    public static final String TRACK_DELETE = "https://tsapi.amap.com/v1/track/trace/delete";
 
     /**
      * 轨迹点上传

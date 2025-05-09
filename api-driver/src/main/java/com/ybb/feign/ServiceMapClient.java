@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ServiceMapClient {
 
     @PostMapping(value = "/point/upload")
-    public ResponseResult upload(@RequestBody PointRequest pointRequest);
+    ResponseResult upload(@RequestBody PointRequest pointRequest);
 
 }
