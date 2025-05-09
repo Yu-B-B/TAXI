@@ -77,7 +77,13 @@ public class VerificationCodeService {
         // 3.判断用户是否已注册过
         VerificationCodeDto codeDto = new VerificationCodeDto();
         codeDto.setPhone(phone);
-        passengerPublicFeign.loginOrRegister(codeDto);
+
+        // 增加远程调用异常捕获
+        try {
+            passengerPublicFeign.loginOrRegister(codeDto);
+        } catch (Exception e) {
+            return ResponseResult.fail(CommonStateEnum.CALL_USER_ADD_ERROR.getCode(),CommonStateEnum.CALL_USER_ADD_ERROR.getMessage());
+        }
 
         // 颁发令牌，identity因该为枚举值/常量
         String accessToken = JwtUtils.generateToken(phone, IdentifyConstant.PASSENGER, TokenConstant.ACCESS_TOKEN);
