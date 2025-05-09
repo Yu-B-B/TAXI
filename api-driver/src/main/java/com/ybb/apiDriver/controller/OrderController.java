@@ -1,11 +1,15 @@
 package com.ybb.apiDriver.controller;
 
 import com.ybb.dto.ResponseResult;
+import com.ybb.dto.TokenResult;
 import com.ybb.request.OrderRequest;
 import com.ybb.apiDriver.service.OrderService;
 import com.ybb.apiDriver.service.PayService;
+import com.ybb.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 司机客户端做接到乘客等操作
@@ -20,8 +24,12 @@ public class OrderController {
 
     // 司机抢单
     @PostMapping("/grap")
-    public ResponseResult grap(@RequestBody OrderRequest orderRequest) {
-
+    public ResponseResult grap(@RequestBody OrderRequest orderRequest, HttpServletRequest header) {
+        String authorization = header.getHeader("Authorization");
+        TokenResult token = JwtUtils.resolveToken(authorization);
+        String identity = token.getIdentity();
+        String driverPhone = token.getPhone();
+        return ResponseResult.success();
     }
 
     // 去接乘客
