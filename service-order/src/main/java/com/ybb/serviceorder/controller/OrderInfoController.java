@@ -32,13 +32,26 @@ public class OrderInfoController {
     }
 
     /**
+     * 创建预约单
+     *
+     * @param orderRequest
+     * @return
+     */
+    @PostMapping("/bookingOrder")
+    public ResponseResult bookingOrder(@RequestBody OrderRequest orderRequest, HttpServletRequest request) {
+        return orderService.bookingOrder(orderRequest);
+    }
+
+
+
+    /**
      * 循环获取附近终端
      * @param orderInfo
      * @return
      */
     @PostMapping("/dispatchOrder")
     public ResponseResult<Boolean> dispatchOrder(@RequestBody OrderInfo orderInfo) {
-        return ResponseResult.success(orderService.dispatchOrder(orderInfo));
+        return ResponseResult.success(orderService.dispatchRealTimeOrder(orderInfo));
     }
 
     /**
