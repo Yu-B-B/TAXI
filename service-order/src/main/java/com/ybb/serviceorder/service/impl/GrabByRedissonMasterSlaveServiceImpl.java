@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("grabByRedissonSingleService")
-public class GrabByRedissonSingleServiceImpl implements GrabService {
+@Service("grabByRedissonMasterSlaveService")
+public class GrabByRedissonMasterSlaveServiceImpl implements GrabService {
 
     @Autowired
     private OrderService orderService;
 
     @Autowired
-    @Qualifier("redissonSingleYml")
+    @Qualifier("redissonMSYml")
     private RedissonClient redissonClient;
 
     @Override

@@ -61,7 +61,8 @@ public class OrderInfoController {
 //    @Qualifier("grabBySingleService")
 //    @Qualifier("grabByMultiService")
 //    @Qualifier("grabByRedisService")
-    @Qualifier("grabByRedissonService")
+//    @Qualifier("grabByRedissonSingleService")
+    @Qualifier("grabByRedissonMasterSlaveService")
     private GrabService grabService;
     /**
      * 抢单业务

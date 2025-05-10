@@ -34,7 +34,18 @@ public class RedisConfig {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        config.useSingleServer().setAddress(potocol + host + ":" + port).setDatabase(0);
+        return Redisson.create(config);
+    }
+
+    // 主从模式
+    @Bean("redissonMSYml")
+    public RedissonClient redisson2() {
+        Config config = null;
+        try {
+            config = Config.fromYAML(new ClassPathResource("/redisson-config/master-replicaof.yaml").getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return Redisson.create(config);
     }
 
