@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service("grabByRedissonService")
-public class GrabByRedissonServiceImpl implements GrabService {
+public class GrabByRedissonSingleServiceImpl implements GrabService {
 
     @Autowired
     private OrderService orderService;
 
     @Autowired
-    @Qualifier("redissonBase")
+    @Qualifier("redissonSingleYml")
     private RedissonClient redissonClient;
 
     @Override

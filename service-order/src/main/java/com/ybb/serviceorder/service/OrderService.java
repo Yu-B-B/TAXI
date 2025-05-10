@@ -25,6 +25,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,8 +50,9 @@ public class OrderService {
     private DriverUserFeignClient driverUserFeignClient;
     @Autowired
     private MapFeignClient mapFeignClient;
-    //    @Autowired
-//    private RedissonClient redissonClient;
+    @Autowired
+    @Qualifier("redissonBase")
+    private RedissonClient redissonClient;
     @Autowired
     private PushFeignClient pushFeignClient;
 
@@ -319,8 +321,8 @@ public class OrderService {
                     Long driverId = driverInfo.getDriverId();
 
                     String lockKey = (driverId + "").intern();
-//                    RLock rLock = redissonClient.getLock(lockKey);
-//                    rLock.lock();
+                    RLock rLock = redissonClient.getLock(lockKey);
+                    rLock.lock();
 
                     // 获取到司机信息后，若司机处于（接单、接乘客、到达乘客目的地、乘客上车）状态下，不允许接单
                     LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
