@@ -29,7 +29,7 @@ public interface DriverUserFeignClient {
     @GetMapping("/service/car/getCarInfo")
     ResponseResult<Car> getCarById(@RequestParam Long carId);
 
-    @PostMapping("/driver-user-work-status/change-status")
+    @PostMapping("/driver-work-status/change-status")
     ResponseResult changeWorkStatus(@RequestBody DriverUserWorkStatus driverUserWorkStatus);
 
     @GetMapping("/driver-car-binding-relationship")

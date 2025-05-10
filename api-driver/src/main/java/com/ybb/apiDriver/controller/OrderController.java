@@ -33,9 +33,7 @@ public class OrderController {
         String receiveOrderCarLatitude = orderRequest.getReceiveOrderCarLatitude();
 
         // 执行抢单
-        orderService.grab(driverPhone,orderRequest.getOrderId(),receiveOrderCarLongitude,receiveOrderCarLatitude);
-
-        return ResponseResult.success();
+        return orderService.grab(driverPhone,orderRequest.getOrderId(),receiveOrderCarLongitude,receiveOrderCarLatitude);
     }
 
     // 去接乘客

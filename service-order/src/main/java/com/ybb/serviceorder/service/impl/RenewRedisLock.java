@@ -18,13 +18,13 @@ public class RenewRedisLock {
         String s = redisTemplate.opsForValue().get(key);
         if (StringUtils.isNotBlank(value) && value.equals(s)) {
             int period = time / 3;
-            System.out.println("开始等待判断");
+//            System.out.println("开始等待判断");
             try {
                 Thread.sleep(period);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("开始续期");
+//            System.out.println("开始续期");
             redisTemplate.expire(key, period, TimeUnit.SECONDS);
         } else {
             return;

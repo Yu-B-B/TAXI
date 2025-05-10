@@ -44,10 +44,11 @@ public class OrderService {
 
         // 检查司机、车辆是否可用
         ResponseResult<OrderDriverResponse> availableDriver = driverUserFeignClient.getAvailableDriver(carId);
-        if (availableDriver == null) {
+
+        OrderDriverResponse orderData = availableDriver.getData();
+        if (orderData == null) {
             return ResponseResult.fail(CommonStateEnum.CAR_NOT_EXISTS.getCode(), CommonStateEnum.CAR_NOT_EXISTS.getMessage());
         }
-        OrderDriverResponse orderData = availableDriver.getData();
 
         // 执行抢单
         DriverGrabRequest driverGrabRequest = new DriverGrabRequest();
