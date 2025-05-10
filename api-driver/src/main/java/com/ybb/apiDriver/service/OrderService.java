@@ -42,7 +42,7 @@ public class OrderService {
         DriverCarBindingRelationship driverCarBindingRelationship = relationShip.getData();
         Long carId = driverCarBindingRelationship.getCarId();
 
-        // 司机、车辆是否可用
+        // 检查司机、车辆是否可用
         ResponseResult<OrderDriverResponse> availableDriver = driverUserFeignClient.getAvailableDriver(carId);
         if (availableDriver == null) {
             return ResponseResult.fail(CommonStateEnum.CAR_NOT_EXISTS.getCode(), CommonStateEnum.CAR_NOT_EXISTS.getMessage());

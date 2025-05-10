@@ -4,8 +4,10 @@ import com.ybb.dto.OrderInfo;
 import com.ybb.dto.ResponseResult;
 import com.ybb.request.DriverGrabRequest;
 import com.ybb.request.OrderRequest;
+import com.ybb.serviceorder.service.GrabService;
 import com.ybb.serviceorder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +56,10 @@ public class OrderInfoController {
         return orderService.detail(orderId);
     }
 
+
+    @Autowired
+    @Qualifier("grabBySingleService")
+    private GrabService grabService;
     /**
      * 抢单业务
      * @param request
@@ -61,7 +67,8 @@ public class OrderInfoController {
      */
     @PostMapping("/order/grab")
     public ResponseResult orderGrab(@RequestBody DriverGrabRequest request) {
-        return orderService.orderGrab(request);
+//        return orderService.orderGrab(request);
+        return grabService.orderGrab(request);
     }
 
 

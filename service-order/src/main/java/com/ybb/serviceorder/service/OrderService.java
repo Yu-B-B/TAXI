@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ybb.constant.IdentifyConstant;
 import com.ybb.dto.*;
 import com.ybb.request.DriverGrabRequest;
+import com.ybb.serviceorder.baseMethod.DtoCopy;
 import com.ybb.serviceorder.feign.MapFeignClient;
 import com.ybb.constant.CommonStateEnum;
 import com.ybb.constant.OrderConstants;
@@ -614,44 +615,29 @@ public class OrderService {
     public ResponseResult orderGrab(DriverGrabRequest request) {
         // 查询订单信息
         OrderInfo orderInfo = orderMapper.selectById(request.getOrderId());
-        if (orderInfo == null){
-            return ResponseResult.fail(CommonStateEnum.ORDER_NOT_EXISTS.getCode(),CommonStateEnum.ORDER_NOT_EXISTS.getMessage());
+        if (orderInfo == null) {
+            return ResponseResult.fail(CommonStateEnum.ORDER_NOT_EXISTS.getCode(), CommonStateEnum.ORDER_NOT_EXISTS.getMessage());
         }
+        // 订单开始后不能再被抢
         int orderStatus = orderInfo.getOrderStatus();
-        if (orderStatus != OrderConstants.ORDER_START){
+        if (orderStatus != OrderConstants.ORDER_START) {
             return ResponseResult.fail(CommonStateEnum.ORDER_CAN_NOT_GRAB.getCode(), CommonStateEnum.ORDER_CAN_NOT_GRAB.getMessage());
         }
-        
-        // 填充订单信息
-        Long driverId = request.getDriverId();
-        Long carId = request.getCarId();
-        String licenseId = request.getLicenseId();
-        String vehicleNo = request.getVehicleNo();
-        String receiveOrderCarLatitude = request.getReceiveOrderCarLatitude();
-        String receiveOrderCarLongitude = request.getReceiveOrderCarLongitude();
-        String vehicleType = request.getVehicleType();
-        String driverPhone = request.getDriverPhone();
 
-        orderInfo.setDriverId(driverId);
-        orderInfo.setDriverPhone(driverPhone);
-        orderInfo.setCarId(carId);
-
-        orderInfo.setReceiveOrderCarLongitude(receiveOrderCarLongitude);
-        orderInfo.setReceiveOrderCarLatitude(receiveOrderCarLatitude);
-        orderInfo.setReceiveOrderTime(LocalDateTime.now());
-
-        orderInfo.setLicenseId(licenseId);
-        orderInfo.setVehicleNo(vehicleNo);
-
-        orderInfo.setVehicleType(vehicleType);
-
-        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+        orderInfo = DtoCopy.grabOrder(orderInfo, request);
 
         orderMapper.updateById(orderInfo);
-        //
 
         return ResponseResult.success();
     }
+
+    // 添加到方法上或方法内指向this
+    public synchronized ResponseResult orderGrab_v1(DriverGrabRequest request) {
+        // 业务执行...
+        // Spring中Bean都是单例，无论多久使用都只有一个对象
+        return ResponseResult.success();
+    }
+
 
     public ResponseResult<OrderInfo> detail(Long orderId) {
         OrderInfo orderInfo = orderMapper.selectById(orderId);
