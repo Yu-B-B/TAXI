@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("grabByRedissonMasterSlaveService")
-public class GrabByRedissonMasterSlaveServiceImpl implements GrabService {
+@Service("grabByRedissonSentinelService")
+public class GrabByRedissonSentinelServiceImpl implements GrabService {
 
     @Autowired
     private OrderService orderService;
 
     @Autowired
-    @Qualifier("redissonMSYml")
+    @Qualifier("redissonSentinelYml")
     private RedissonClient redissonClient;
 
     @Override
@@ -28,6 +28,7 @@ public class GrabByRedissonMasterSlaveServiceImpl implements GrabService {
 
         ResponseResult responseResult = orderService.orderGrab(request);
         lock.unlock();
+
         return responseResult;
     }
 }

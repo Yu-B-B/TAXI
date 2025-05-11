@@ -27,7 +27,7 @@ public class GrabByRedissonServiceImpl implements GrabService {
         lock.lock();
 
         ResponseResult responseResult = orderService.orderGrab(request);
-
+        lock.unlock();
         return responseResult;
     }
 }

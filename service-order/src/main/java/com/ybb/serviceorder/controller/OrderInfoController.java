@@ -60,9 +60,12 @@ public class OrderInfoController {
     @Autowired
 //    @Qualifier("grabBySingleService")
 //    @Qualifier("grabByMultiService")
-//    @Qualifier("grabByRedisService")
+//    @Qualifier("grabByRedisService") // 使用redis做锁
 //    @Qualifier("grabByRedissonSingleService")
-    @Qualifier("grabByRedissonMasterSlaveService")
+//    @Qualifier("grabByRedissonMasterSlaveService") // redis主从复制
+//    @Qualifier("grabByRedissonSentinelService") // redis哨兵
+//    @Qualifier("grabByRedissonClusterService") // redis集群
+    @Qualifier("grabByRedissonRedLockService") // redis红锁
     private GrabService grabService;
     /**
      * 抢单业务
