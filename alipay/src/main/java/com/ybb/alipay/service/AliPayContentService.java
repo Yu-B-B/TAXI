@@ -2,6 +2,7 @@ package com.ybb.alipay.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ybb.alipay.feign.OrderFeignClient;
 import com.ybb.alipay.mapper.AliPayContentMapper;
 import com.ybb.dto.AliPayContent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,13 @@ import java.util.Map;
 public class AliPayContentService {
     @Autowired
     private AliPayContentMapper aliPayContentMapper;
+    @Autowired
+    private OrderFeignClient orderFeignClient;
+
+
+    public void pay(Long orderId) {
+
+    }
 
     public Map<String,String> selectAll(){
         Map<String, String> stringStringHashMap = new HashMap<>();
@@ -24,4 +32,5 @@ public class AliPayContentService {
         });
         return stringStringHashMap;
     }
+
 }

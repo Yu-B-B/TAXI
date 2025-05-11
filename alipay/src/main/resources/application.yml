@@ -6,3 +6,7 @@ spring:
     url: jdbc:mysql://192.168.0.106:3306/alipay?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root1
     password: 987654
+  application:
+    name: alipay
+
+
