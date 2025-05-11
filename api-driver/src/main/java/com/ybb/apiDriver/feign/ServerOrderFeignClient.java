@@ -50,4 +50,5 @@ public interface ServerOrderFeignClient {
     ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest);
 
 
+    void pushPayInfo(OrderRequest orderRequest);
 }

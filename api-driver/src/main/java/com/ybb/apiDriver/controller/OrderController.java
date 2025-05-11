@@ -66,10 +66,9 @@ public class OrderController {
         return orderService.passengerGetoff(orderRequest);
     }
 
-    // 发起收款
+    // 发起收款，行程结束后调用
     @PostMapping("/push-pay-info")
     public ResponseResult pushPayInfo(@RequestParam Long orderId , @RequestParam String price, @RequestParam Long passengerId){
-
         return payService.pushPayInfo(orderId,price,passengerId);
     }
 

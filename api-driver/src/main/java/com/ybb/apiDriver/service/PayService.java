@@ -26,7 +26,7 @@ public class PayService {
         // 修改订单状态
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setOrderId(orderId);
-//        serviceOrderClient.pushPayInfo(orderRequest);
+        serviceOrderClient.pushPayInfo(orderRequest);
 
         PushRequest pushRequest = new PushRequest();
         pushRequest.setContent(message.toString());

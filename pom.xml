@@ -22,6 +22,7 @@
         <module>api-driver</module>
         <module>service-order</module>
         <module>service-see-push</module>
+        <module>alipay</module>
     </modules>
     <version>1.0-SNAPSHOT</version>
 
